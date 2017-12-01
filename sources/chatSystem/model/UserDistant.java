@@ -9,5 +9,11 @@ public class UserDistant {
 
 
 
-    public
+    public UserDistant(String leLogin, String lAdresseIP, String lePseudo){
+        this.login = leLogin;
+        this.adresseIP = lAdresseIP;
+        this.pseudoActuel = lePseudo;
+
+
+    }
 }
