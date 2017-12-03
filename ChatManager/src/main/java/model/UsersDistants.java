@@ -18,8 +18,20 @@ public class UsersDistants {
     }
 
     public String toString(){
-        String userDistantsEnString = login +" "+ adresseIP+" "+ pseudoActuel+" "+portDistant;
+        String userDistantsEnString =login+","+adresseIP+","+pseudoActuel+","+portDistant;
         return userDistantsEnString;
 
+    }
+
+    public String getLogin(){
+        return login;
+    }
+
+    public int getPortDistant(){
+        return portDistant;
+    }
+
+    public String getAdresseIP() {
+        return adresseIP;
     }
 }

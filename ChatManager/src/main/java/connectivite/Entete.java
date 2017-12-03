@@ -1,0 +1,14 @@
+package connectivite;
+
+public enum Entete {
+
+    ENVOIE_MESSAGE,
+    DEMANDE_DE_CONNEXION,
+    DEMANDE_OUVERTURE_SESSION,
+    ENVOIE_USERLOCAL,
+    ENVOIE_USERSDISTANTS,
+    DEMANDE_FIN_SESSION,
+    FIN_DE_CONNEXION
+
+
+}
