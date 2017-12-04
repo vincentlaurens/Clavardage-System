@@ -1,16 +1,16 @@
 package model;
 
-import main.ClavardageManager;
+import main.ChatManager;
 
 import java.util.HashMap;
 
 public class ListeDesUsagers {
 
-    private ClavardageManager clavardageManager;
+    private ChatManager clavardageManager;
 
     private static HashMap<String, UsersDistants> listeDesUsersParLeurLogin = new HashMap<String, UsersDistants>();
 
-    public ListeDesUsagers(ClavardageManager theManager){
+    public ListeDesUsagers(ChatManager theManager){
         this.clavardageManager = theManager;
 
     }

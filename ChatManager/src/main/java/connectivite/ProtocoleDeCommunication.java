@@ -1,11 +1,11 @@
 package connectivite;
 
 
-import main.ClavardageManager;
+import main.ChatManager;
 import model.UsersDistants;
 
 public class ProtocoleDeCommunication {
-    private ClavardageManager clavardageManager;
+    private ChatManager clavardageManager;
 
     private TCP_ReceptionMessage tcp_receptionMessage = new TCP_ReceptionMessage();
     private TCP_EnvoieMessage tcp_envoieMessage;
@@ -15,7 +15,7 @@ public class ProtocoleDeCommunication {
 
 
 
-    public ProtocoleDeCommunication(ClavardageManager theManager){
+    public ProtocoleDeCommunication(ChatManager theManager){
         this.clavardageManager = theManager;
     }
 
