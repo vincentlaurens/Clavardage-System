@@ -7,7 +7,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import connectivite.Entete;
 import connectivite.ProtocoleDeCommunication;
-import main.ClavardageManager;
+import main.ChatManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -37,7 +37,7 @@ public class ProtocoleDeCommunicationTest {
     @Test
     public void should_print_incoming_messages() throws Exception {
         String receivedMessage = ENVOIE_MESSAGE_ENTETE + FIELDSEPARATOR + SOME_CONTENT_MESSAGE;
-        ClavardageManager clavardageManager = new ClavardageManager();
+        ChatManager clavardageManager = new ChatManager();
 
         ProtocoleDeCommunication protocoleDeCommunication = new ProtocoleDeCommunication(clavardageManager);
         protocoleDeCommunication.onNewIncomingMessage(receivedMessage);
@@ -50,7 +50,7 @@ public class ProtocoleDeCommunicationTest {
     @Test
     public void should_print_userLocalDistant() throws Exception {
         String receivedMessage = ENVOIE_MESSAGE_ENTETE + FIELDSEPARATOR + SOME_CONTENT_MESSAGE;
-        ClavardageManager clavardageManager = new ClavardageManager();
+        ChatManager clavardageManager = new ChatManager();
 
         ProtocoleDeCommunication protocoleDeCommunication = new ProtocoleDeCommunication(clavardageManager);
         protocoleDeCommunication.onNewIncomingMessage(receivedMessage);
