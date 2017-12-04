@@ -28,6 +28,7 @@ public class UserLocal {
     public String useIpUser(){
         return this.ip;
     }
+
     public void userPseudoAdd(String pseudo){
         this.pseudo = pseudo;
     }

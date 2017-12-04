@@ -5,17 +5,23 @@ import main.ChatManager;
 import model.UserLocal;
 import model.UsersDistants;
 
+import javax.jws.soap.SOAPBinding;
 import java.net.ServerSocket;
 import java.util.Set;
 
 public class ProtocoleDeCommunication {
     private ChatManager clavardageManager;
 
+    private boolean dernierSurLaListe = false;
+
     private TCP_ReceptionMessage tcp_receptionMessage = new TCP_ReceptionMessage();
     private TCP_EnvoieMessage tcp_envoieMessage;
 
     private UDP_ReceptionMessage udp_receptionMessage = new UDP_ReceptionMessage();
     private UDP_EnvoieMessage udp_envoieMessage;
+
+
+    private static final String BROADCAST_ADDRESS = "255.255.255.255";
 
 
     public ProtocoleDeCommunication(ChatManager theManager) {
@@ -75,17 +81,31 @@ public class ProtocoleDeCommunication {
     public void onNewIncomingMessage(String messageRecue) {
         String[] messageSurLeReseauRecue = messageRecue.split("[$]", 2);
         Entete enteteDuMessageRentrant = Entete.valueOf(messageSurLeReseauRecue[0]);
-        Object contenuMessageRentrant = messageSurLeReseauRecue[1];
-        MessageSurLeReseau messageSurLeReseau;
+
         switch (enteteDuMessageRentrant) {
             case ENVOIE_MESSAGE:
                 //clavardageManager.envoieAuDessus(messageSurLeReseauRecue[1]);
+                String contenuMessageRentrant = messageSurLeReseauRecue[1];
                 System.out.println(contenuMessageRentrant);
 
                 break;
             case ENVOIE_USERLOCAL:
-                System.out.println(messageSurLeReseauRecue[1].toString());
+                String userDistantAsString = messageSurLeReseauRecue[1];
+                String[] attributDesUserDistantAsString = userDistantAsString.split("[,]");
+                String loginUserDistant = attributDesUserDistantAsString[0];
+                String ipUserDistant = attributDesUserDistantAsString[1];
+                String pseudoUserDistant = attributDesUserDistantAsString[2];
+                int portDistant = Integer.parseInt(attributDesUserDistantAsString[3]);
+                UsersDistants userDistant = new UsersDistants(loginUserDistant, ipUserDistant, pseudoUserDistant, portDistant);
+                clavardageManager.accesALaListeDesUsagers().ajouteUnUtilisateurDistantALaListe(userDistant);
                 break;
+
+            case DEMANDE_DE_CONNEXION:
+                if (dernierSurLaListe){
+                    envoieDesUsersDistantAuNouvelEntrant();
+                }
+                break;
+
         }
 
     }
@@ -131,5 +151,12 @@ public class ProtocoleDeCommunication {
         }
 
         return localport;
+    }
+
+
+    public void demandeDeConnexion(){
+        MessageSurLeReseau demandeDeConnexionMessage = new MessageSurLeReseau(Entete.DEMANDE_DE_CONNEXION, "Vide");
+        udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, lePort, demandeDeConnexionMessage);
+
     }
 }
