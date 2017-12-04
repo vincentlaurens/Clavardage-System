@@ -1,5 +1,6 @@
 package main;
 
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import connectivite.ProtocoleDeCommunication;
 import model.ListeDesUsagers;
 import model.Sessions;
@@ -21,6 +22,10 @@ public class ChatManager {
         return listeDesUsagers;
     }
 
+    public UserLocal returnUserLocal(){
+        return user;
+    }
+
     public String userLogin(){
         return  this.user.useLoginUser();
     }
@@ -28,7 +33,7 @@ public class ChatManager {
         return this.user.usePasswordUser();
     }
     public void addPseudoToUser(String pseudo){
-        this.user.userPseudoadd(pseudo);
+        this.user.userPseudoAdd(pseudo);
     }
     public String userPseudo(){
         return this.user.usePseudoUser();

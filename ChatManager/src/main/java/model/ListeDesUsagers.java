@@ -2,7 +2,9 @@ package model;
 
 import main.ChatManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class ListeDesUsagers {
 
@@ -17,13 +19,27 @@ public class ListeDesUsagers {
 
     public void ajouteUnUtilisateurDistantALaListe(UsersDistants nouveauUserDistant){
         String leLoginUserDistant = nouveauUserDistant.getLogin();
-        listeDesUsersParLeurLogin.put(leLoginUserDistant, nouveauUserDistant);
+        if(listeDesUsersParLeurLogin.containsKey(leLoginUserDistant)){
+            listeDesUsersParLeurLogin.replace(leLoginUserDistant, nouveauUserDistant);
+        }
+        else{
+            listeDesUsersParLeurLogin.put(leLoginUserDistant, nouveauUserDistant);
+        }
     }
 
     public UsersDistants retourneUnUtilisateurDistantParSonLogin(String login){
         UsersDistants leUser = listeDesUsersParLeurLogin.get(login);
         return leUser;
     }
+
+    public Set<String> retourneToutLesUsagers() {
+        Set<String> toutLesKeyDeLaTableDesUsers = listeDesUsersParLeurLogin.keySet();
+        return toutLesKeyDeLaTableDesUsers;
+
+
+    }
+
+
 
 
 

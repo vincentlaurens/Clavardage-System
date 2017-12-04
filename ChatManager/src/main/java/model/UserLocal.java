@@ -25,7 +25,10 @@ public class UserLocal {
         return this.password;
 
     }
-    public void userPseudoadd(String pseudo){
+    public String useIpUser(){
+        return this.ip;
+    }
+    public void userPseudoAdd(String pseudo){
         this.pseudo = pseudo;
     }
 }

@@ -1,5 +1,7 @@
 package connectivite;
 
+import model.UserLocal;
+
 public class MessageSurLeReseau {
 
     public Entete entete;
@@ -34,4 +36,5 @@ public class MessageSurLeReseau {
         return leTableauDOctet;
 
     }
+
 }

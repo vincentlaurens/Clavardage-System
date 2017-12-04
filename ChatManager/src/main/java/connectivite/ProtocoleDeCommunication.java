@@ -2,7 +2,11 @@ package connectivite;
 
 
 import main.ChatManager;
+import model.UserLocal;
 import model.UsersDistants;
+
+import java.net.ServerSocket;
+import java.util.Set;
 
 public class ProtocoleDeCommunication {
     private ChatManager clavardageManager;
@@ -14,30 +18,29 @@ public class ProtocoleDeCommunication {
     private UDP_EnvoieMessage udp_envoieMessage;
 
 
-
-    public ProtocoleDeCommunication(ChatManager theManager){
+    public ProtocoleDeCommunication(ChatManager theManager) {
         this.clavardageManager = theManager;
     }
 
 
-
-    public void ecouteDuReseauEnTCP(int port){
+    public void ecouteDuReseauEnTCP(int port) {
         try {
             tcp_receptionMessage.listenOnPort(port, this);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void ecouteDuReseauEnUDP(int port){
+
+    public void ecouteDuReseauEnUDP(int port) {
         try {
             udp_receptionMessage.listenOnPort(port, this);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    public void envoieDunMessageEnTCP(String loginDestinaire, MessageSurLeReseau messageToSend){
+    public void envoieDunMessageEnTCP(String loginDestinaire, MessageSurLeReseau messageToSend) {
         UsersDistants usersDestinataire = this.clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(loginDestinaire);
         String ipAddress = usersDestinataire.getAdresseIP();
         int portDistant = usersDestinataire.getPortDistant();
@@ -45,24 +48,27 @@ public class ProtocoleDeCommunication {
         tcp_envoieMessage = new TCP_EnvoieMessage();
         try {
             tcp_envoieMessage.sendMessageOn(ipAddress, portDistant, messageToSend);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void envoieDunMessageEnUDP(String[] loginDestinaire, MessageSurLeReseau messageToSend){
-        for (String st: loginDestinaire) {
-            UsersDistants usersDestinataire = this.clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(st);
-            String ipAddress = usersDestinataire.getAdresseIP();
-            int portDistant = usersDestinataire.getPortDistant();
+    public void envoieDunMessageEnUDP(Set<String> loginDestinaire, MessageSurLeReseau messageToSend) {
+        if (!(loginDestinaire.size() == 0)) {
+            for (String st : loginDestinaire) {
+                UsersDistants usersDestinataire = this.clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(st);
+                String ipAddress = usersDestinataire.getAdresseIP();
+                int portDistant = usersDestinataire.getPortDistant();
 
-            udp_envoieMessage = new UDP_EnvoieMessage();
-            try {
-                udp_envoieMessage.sendMessageOn(ipAddress, portDistant, messageToSend);
-            }catch (Exception e){
-                e.printStackTrace();
+                udp_envoieMessage = new UDP_EnvoieMessage();
+                try {
+                    udp_envoieMessage.sendMessageOn(ipAddress, portDistant, messageToSend);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
+
 
     }
 
@@ -71,7 +77,7 @@ public class ProtocoleDeCommunication {
         Entete enteteDuMessageRentrant = Entete.valueOf(messageSurLeReseauRecue[0]);
         Object contenuMessageRentrant = messageSurLeReseauRecue[1];
         MessageSurLeReseau messageSurLeReseau;
-        switch (enteteDuMessageRentrant){
+        switch (enteteDuMessageRentrant) {
             case ENVOIE_MESSAGE:
                 //clavardageManager.envoieAuDessus(messageSurLeReseauRecue[1]);
                 System.out.println(contenuMessageRentrant);
@@ -82,11 +88,48 @@ public class ProtocoleDeCommunication {
                 break;
         }
 
+    }
+
+    public void diffusionDuUserLocal() {
+        UserLocal userLoc = clavardageManager.returnUserLocal();
+
+        String loginUserLoc = userLoc.useLoginUser();
+        String ipAddress = userLoc.useIpUser();
+        String pseudoActuel = userLoc.usePseudoUser();
+        int port = choixPort();
+
+        UsersDistants userLocalAsDistant = new UsersDistants(loginUserLoc, ipAddress, pseudoActuel, port);
 
 
+        Set<String> toutLesUtilisateurConnecte = clavardageManager.accesALaListeDesUsagers().retourneToutLesUsagers();
+        MessageSurLeReseau messageSurLeReseau = new MessageSurLeReseau(Entete.ENVOIE_USERLOCAL, userLocalAsDistant);
 
 
+        envoieDunMessageEnUDP(toutLesUtilisateurConnecte, messageSurLeReseau);
+
+    }
+
+    public int choixPort() {
 
 
+        int localport = 1024;
+        boolean bindIsDone = false;
+
+        ServerSocket server = null ;
+
+        int tentative = 0;
+
+        while (!bindIsDone){
+
+            try{
+
+                localport++;
+                server = new ServerSocket(localport);
+                bindIsDone = true ;
+                server.close();
+            }catch (Exception e){}
+        }
+
+        return localport;
     }
 }
