@@ -56,9 +56,9 @@ public class ProtocoleDeCommunication {
             String ipAddress = usersDestinataire.getAdresseIP();
             int portDistant = usersDestinataire.getPortDistant();
 
-            tcp_envoieMessage = new TCP_EnvoieMessage();
+            udp_envoieMessage = new UDP_EnvoieMessage();
             try {
-                tcp_envoieMessage.sendMessageOn(ipAddress, portDistant, messageToSend);
+                udp_envoieMessage.sendMessageOn(ipAddress, portDistant, messageToSend);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -74,6 +74,7 @@ public class ProtocoleDeCommunication {
         switch (enteteDuMessageRentrant){
             case ENVOIE_MESSAGE:
                 //clavardageManager.envoieAuDessus(messageSurLeReseauRecue[1]);
+                System.out.println(contenuMessageRentrant);
 
                 break;
             case ENVOIE_USERLOCAL:

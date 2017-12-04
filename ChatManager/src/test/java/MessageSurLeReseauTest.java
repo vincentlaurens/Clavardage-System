@@ -36,6 +36,8 @@ public class MessageSurLeReseauTest{
         assertThat(standardOutput(), containsString(expectedOutput));
     }
 
+
+
     private String standardOutput() {
         return out.toString();
     }
