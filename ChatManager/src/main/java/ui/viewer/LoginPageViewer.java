@@ -1,10 +1,12 @@
 package ui.viewer;
 
+import main.ChatManager;
 import ui.presenter.LoginPageController;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.io.IOException;
 
 public class LoginPageViewer extends JDialog{
     private final JLabel labelLogin, labelMotDePasse;
@@ -12,12 +14,13 @@ public class LoginPageViewer extends JDialog{
     private final JPasswordField fieldMotdePasse;
     private final JButton btnLogin, btnCancel;
     private LoginPageController loginController;
+    private ChatManager chatManager;
 
-    public LoginPageViewer(JFrame parent) {
+    public LoginPageViewer(JFrame parent, ChatManager theCM) {
 
         super(parent, "Connexion", true);
 
-        this.loginController = new LoginPageController();
+        this.loginController = new LoginPageController(theCM);
         //
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
@@ -50,7 +53,13 @@ public class LoginPageViewer extends JDialog{
         panel.setBorder(new LineBorder(Color.GRAY));
 
         btnLogin = new JButton("Login");
-        btnLogin.addActionListener(e-> this.loginController.onLoginButtonClicked(textFieldLogin.getText(), fieldMotdePasse.getPassword(), parent));
+        btnLogin.addActionListener(e -> {
+            try {
+                this.loginController.onLoginButtonClicked(textFieldLogin.getText(), fieldMotdePasse.getPassword(), parent);
+            } catch ( IOException e1 ) {
+                e1.printStackTrace();
+            }
+        });
         btnCancel = new JButton("Cancel");
         btnCancel.addActionListener(e-> this.loginController.onCancelButtonClicked(parent));
         JPanel bp = new JPanel();

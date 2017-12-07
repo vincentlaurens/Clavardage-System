@@ -7,35 +7,34 @@ import ui.viewer.ErrorViewer;
 import ui.viewer.PseudoPageViewer;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class LoginPageController {
 
-    private ChatManager chatManager = new ChatManager();
+    private ChatManager chatManager;
     private ErrorViewer errorViewer = new ErrorViewer();
     private String passwordTextString;
 
+    public LoginPageController(ChatManager theCM){
+        this.chatManager = theCM;
+    }
+
 
     private boolean checkLogin(String loginText){
-        System.out.println("login: "+loginText);
-        System.out.println("login: "+this.chatManager.userLogin());
         if (this.chatManager.userLogin().contentEquals(loginText)){
             return true;
         }
         return false;
     }
     private boolean checkPassword(String passwordText){
-        System.out.println("pass: "+passwordText);
-        System.out.println("pass: "+this.chatManager.userPassword());
         if (this.chatManager.userPassword().contentEquals(passwordText)){
             return true;
         }
         return false;
     }
 
-    public void onLoginButtonClicked(String loginText, char[] passwordText, JFrame parent) {
+    public void onLoginButtonClicked(String loginText, char[] passwordText, JFrame parent) throws IOException {
         this.passwordTextString = String.valueOf(passwordText);
-        System.out.println("login: "+loginText);
-        System.out.println("Mot de passe: "+this.passwordTextString);
 
         if (loginText.isEmpty() || this.passwordTextString.isEmpty()) {
             errorViewer.WarningViewer("Les champs login et password sont obligatoires!!!!!");
@@ -44,8 +43,7 @@ public class LoginPageController {
         }else if (!this.checkPassword(this.passwordTextString)) {
             errorViewer.WarningViewer("Le mot de passe renseigné est incorrect!!!!!");
         }else{
-            System.out.println("pseudo fenetre");
-            PseudoPageViewer pseudoPage = new PseudoPageViewer(parent);
+            PseudoPageViewer pseudoPage = new PseudoPageViewer(parent, this.chatManager);
             parent.dispose();
             pseudoPage.afficherPage();
 

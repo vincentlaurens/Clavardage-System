@@ -1,5 +1,6 @@
 package ui.viewer;
 
+import main.ChatManager;
 import ui.presenter.DialoguePageController;
 
 import javax.swing.*;
@@ -12,10 +13,13 @@ public class DialoguePageViewer extends JFrame{
     private JTextField inputTextField;
     private JButton sendButton;
     private JTree listeUsersConnectes;
+    private ChatManager chatManager;
 
-    public DialoguePageViewer(String pseudo)throws HeadlessException {
+    public DialoguePageViewer(String pseudo, ChatManager theCM)throws HeadlessException {
         super();
+        this.chatManager = theCM;
         build(pseudo);
+
 
     }
     private void build(String pseudo){
@@ -41,8 +45,19 @@ public class DialoguePageViewer extends JFrame{
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Utilisateurs Connectés");
 
-        listeUsersConnectes = new JTree(root);
-        add(new JScrollPane(listeUsersConnectes), BorderLayout.WEST);
+
+        if(!(this.chatManager.accesALaListeDesUsagers().retourneToutLesUsagers().isEmpty())){
+            int tailleDeLaListeDesUsersCos = chatManager.accesALaListeDesUsagers().retourneToutLesUsagers().size();
+
+            String[] usersCo= new String[tailleDeLaListeDesUsersCos];
+            for (String pseudoUsersCo : usersCo){
+                DefaultMutableTreeNode child = new DefaultMutableTreeNode(pseudoUsersCo);
+                root.add(child);
+            }
+            listeUsersConnectes = new JTree(root);
+            add(new JScrollPane(listeUsersConnectes), BorderLayout.WEST);
+        }
+
 
 
     }

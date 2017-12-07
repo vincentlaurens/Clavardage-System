@@ -127,15 +127,9 @@ public class ProtocoleDeCommunication {
     }
 
     public void diffusionDuUserLocal() {
-        UserLocal userLoc = clavardageManager.returnUserLocal();
 
-        String loginUserLoc = userLoc.useLoginUser();
-        String ipAddress = userLoc.useIpUser();
-        String pseudoActuel = userLoc.usePseudoUser();
-        int port = choixPort();
 
-        UsersDistants userLocalAsDistant = new UsersDistants(loginUserLoc, ipAddress, pseudoActuel, port);
-
+        UsersDistants userLocalAsDistant = clavardageManager.returnUserLocal().retourneUserLocalAsDistant();
 
         Set<String> toutLesUtilisateurConnecte = clavardageManager.accesALaListeDesUsagers().retourneToutLesUsagers();
         MessageSurLeReseau messageSurLeReseau = new MessageSurLeReseau(Entete.ENVOIE_USERLOCAL, userLocalAsDistant);
@@ -171,7 +165,7 @@ public class ProtocoleDeCommunication {
 
 
     public void demandeDeConnexion(){
-        String AdresseIpDuDemandeurEtSonPort = us
+        String AdresseIpDuDemandeurEtSonPort;
         MessageSurLeReseau demandeDeConnexionMessage = new MessageSurLeReseau(Entete.DEMANDE_DE_CONNEXION, "Vide");
         try {
             udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, PORT_UDP_BROADCAST, demandeDeConnexionMessage);

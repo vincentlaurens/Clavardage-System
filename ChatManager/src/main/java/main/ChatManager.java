@@ -1,14 +1,19 @@
 package main;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import connectivite.ProtocoleDeCommunication;
 import model.ListeDesUsagers;
 import model.Sessions;
 import model.UserLocal;
+import model.UsersDistants;
+
+
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatManager {
     private ProtocoleDeCommunication protocoleDeCommunication = new ProtocoleDeCommunication(this);
-    private final ListeDesUsagers listeDesUsagers = new ListeDesUsagers(this);
+    private final ListeDesUsagers listeDesUsagers;
     private final Sessions session;
     private UserLocal user;
 
@@ -16,6 +21,7 @@ public class ChatManager {
     public ChatManager(){
         this.session = new Sessions();
         this.user = new UserLocal(null, null, "vince", "toto");
+        this.listeDesUsagers = new ListeDesUsagers(this);
     }
 
     public ListeDesUsagers accesALaListeDesUsagers(){
@@ -38,6 +44,46 @@ public class ChatManager {
     public String userPseudo(){
         return this.user.usePseudoUser();
     }
+
+    public ProtocoleDeCommunication getProtocoleDeCommunication() {
+        return protocoleDeCommunication;
+    }
+
+    public void addIpadressToUser(String IpAdress){
+        this.user.userIPAdressAdd(IpAdress);
+    }
+    public String userIp(){return this.user.useIpUser();}
+
+    public boolean verificationUnicitePseudo(String pseudo) {
+        boolean pseudoUnique = true;
+        System.out.println(listeDesUsagers.retourneToutLesUsagers().size());
+        System.out.println(listeDesUsagers.retourneUnUtilisateurDistantParSonLogin("vince").toString());
+        if (!(this.listeDesUsagers.retourneToutLesUsagers().size() == 1)) {
+            Set<String> usersCo = this.listeDesUsagers.retourneToutLesUsagers();
+            while (pseudoUnique){
+                for (String st: usersCo) {
+                    UsersDistants usersDistantsCourant = this.listeDesUsagers.retourneUnUtilisateurDistantParSonLogin(st);
+                    if (usersDistantsCourant.getPseudoActuel().equals(pseudo)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean verificationCasse(String newPseudo) {
+        if (newPseudo != null) {
+            String regex = "^[^,;/\\\\.@é\"\"'{}()_+\\-èàç\\^ïëêî!\\?\\.µ$£§¤#~&°]+$"; /*" /^[^@&\"()!_$*€£`+=;?#éèçà,:ù%µ§]+$/";*/
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(newPseudo);
+            if (!matcher.matches()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 }
 

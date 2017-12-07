@@ -27,6 +27,10 @@ public class UsersDistants {
         return login;
     }
 
+    public String getPseudoActuel(){
+        return pseudoActuel;
+    }
+
     public int getPortDistant(){
         return portDistant;
     }

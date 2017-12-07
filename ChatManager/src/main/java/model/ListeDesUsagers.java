@@ -14,6 +14,8 @@ public class ListeDesUsagers {
 
     public ListeDesUsagers(ChatManager theManager){
         this.clavardageManager = theManager;
+        listeDesUsersParLeurLogin.put(theManager.userLogin(), theManager.returnUserLocal().retourneUserLocalAsDistant());
+
 
     }
 
@@ -48,6 +50,7 @@ public class ListeDesUsagers {
         }
         return  toutLesUsagersConnusAsString;
     }
+
 
 
 
