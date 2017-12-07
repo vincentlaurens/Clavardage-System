@@ -39,6 +39,16 @@ public class ListeDesUsagers {
 
     }
 
+    public String retourneToutLesUsagersAsString(){
+        String toutLesUsagersConnusAsString = "";
+        Set<String> toutlesKeyDeLaTableDesUsers = retourneToutLesUsagers();
+        for (String st: toutlesKeyDeLaTableDesUsers) {
+            toutLesUsagersConnusAsString = toutLesUsagersConnusAsString.concat(st.toString());
+            toutLesUsagersConnusAsString = toutLesUsagersConnusAsString.concat("//");
+        }
+        return  toutLesUsagersConnusAsString;
+    }
+
 
 
 

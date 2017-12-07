@@ -22,6 +22,7 @@ public class ProtocoleDeCommunication {
 
 
     private static final String BROADCAST_ADDRESS = "255.255.255.255";
+    private static final int PORT_UDP_BROADCAST = 10000;
 
 
     public ProtocoleDeCommunication(ChatManager theManager) {
@@ -37,9 +38,9 @@ public class ProtocoleDeCommunication {
         }
     }
 
-    public void ecouteDuReseauEnUDP(int port) {
+    public void ecouteDuReseauEnUDP() {
         try {
-            udp_receptionMessage.listenOnPort(port, this);
+            udp_receptionMessage.listenOnPort(PORT_UDP_BROADCAST, this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,6 +107,21 @@ public class ProtocoleDeCommunication {
                 }
                 break;
 
+            case DEMANDE_OUVERTURE_SESSION:
+
+                break;
+
+            case ENVOIE_USERSDISTANTS:
+                break;
+
+            case FIN_DE_CONNEXION:
+                break;
+
+            case DEMANDE_FIN_SESSION:
+                break;
+
+            default:
+                break;
         }
 
     }
@@ -155,8 +171,16 @@ public class ProtocoleDeCommunication {
 
 
     public void demandeDeConnexion(){
+        String AdresseIpDuDemandeurEtSonPort = us
         MessageSurLeReseau demandeDeConnexionMessage = new MessageSurLeReseau(Entete.DEMANDE_DE_CONNEXION, "Vide");
-        udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, lePort, demandeDeConnexionMessage);
+        try {
+            udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, PORT_UDP_BROADCAST, demandeDeConnexionMessage);
+        } catch (Exception e) {}
+
+    }
+
+
+    public void envoieDesUsersDistantAuNouvelEntrant(){
 
     }
 }
