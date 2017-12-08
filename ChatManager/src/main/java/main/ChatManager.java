@@ -22,6 +22,7 @@ public class ChatManager {
         this.session = new Sessions();
         this.user = new UserLocal(null, null, "vince", "toto");
         this.listeDesUsagers = new ListeDesUsagers(this);
+        protocoleDeCommunication.demandeDeConnexion();
     }
 
     public ListeDesUsagers accesALaListeDesUsagers(){
@@ -53,6 +54,8 @@ public class ChatManager {
         this.user.userIPAdressAdd(IpAdress);
     }
     public String userIp(){return this.user.useIpUser();}
+
+    public int userPort(){return  this.user.usePortTCP();}
 
     public boolean verificationUnicitePseudo(String pseudo) {
         boolean pseudoUnique = true;

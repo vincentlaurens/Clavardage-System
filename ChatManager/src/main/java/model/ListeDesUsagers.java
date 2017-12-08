@@ -45,15 +45,24 @@ public class ListeDesUsagers {
         String toutLesUsagersConnusAsString = "";
         Set<String> toutlesKeyDeLaTableDesUsers = retourneToutLesUsagers();
         for (String st: toutlesKeyDeLaTableDesUsers) {
-            toutLesUsagersConnusAsString = toutLesUsagersConnusAsString.concat(st.toString());
-            toutLesUsagersConnusAsString = toutLesUsagersConnusAsString.concat("//");
+            toutLesUsagersConnusAsString = toutLesUsagersConnusAsString.concat(retourneUnUtilisateurDistantParSonLogin(st).toString());
+            toutLesUsagersConnusAsString = toutLesUsagersConnusAsString.concat("/");
+
         }
+        toutLesUsagersConnusAsString = toutLesUsagersConnusAsString.substring(0, toutLesUsagersConnusAsString.length()-1);
         return  toutLesUsagersConnusAsString;
     }
 
 
+    public void ajouteToutLesUsagers(String toutLesUsagersAsString) {
 
+        String[] usersAsString = toutLesUsagersAsString.split("[/]");
+        for (String users : usersAsString) {
+            String[] elementsDuUsers = users.split("[,]");
+            UsersDistants nouveauUser = new UsersDistants(elementsDuUsers[0], elementsDuUsers[1], elementsDuUsers[2], Integer.parseInt(elementsDuUsers[3]));
 
+            this.clavardageManager.accesALaListeDesUsagers().ajouteUnUtilisateurDistantALaListe(nouveauUser);
 
-
+        }
+    }
 }

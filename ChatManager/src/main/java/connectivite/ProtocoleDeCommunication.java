@@ -12,7 +12,7 @@ import java.util.Set;
 public class ProtocoleDeCommunication {
     private ChatManager clavardageManager;
 
-    private boolean dernierSurLaListe = false;
+    private boolean dernierSurLaListe = true;
 
     private TCP_ReceptionMessage tcp_receptionMessage = new TCP_ReceptionMessage();
     private TCP_EnvoieMessage tcp_envoieMessage;
@@ -51,6 +51,16 @@ public class ProtocoleDeCommunication {
         UsersDistants usersDestinataire = this.clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(loginDestinaire);
         String ipAddress = usersDestinataire.getAdresseIP();
         int portDistant = usersDestinataire.getPortDistant();
+
+        tcp_envoieMessage = new TCP_EnvoieMessage();
+        try {
+            tcp_envoieMessage.sendMessageOn(ipAddress, portDistant, messageToSend);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void envoieDunMessageEnTCPparIP(String ipAddress,int portDistant, MessageSurLeReseau messageToSend) {
 
         tcp_envoieMessage = new TCP_EnvoieMessage();
         try {
@@ -103,8 +113,13 @@ public class ProtocoleDeCommunication {
 
             case DEMANDE_DE_CONNEXION:
                 if (dernierSurLaListe){
-                    envoieDesUsersDistantAuNouvelEntrant();
+                    String ipAddressUserDistantEtPort[] = messageSurLeReseauRecue[1].split("[,]");
+                    String ipAddress = ipAddressUserDistantEtPort[0];
+                    int port = Integer.parseInt(ipAddressUserDistantEtPort[1]);
+                    envoieDesUsersDistantAuNouvelEntrant(ipAddress, port);
+                    dernierSurLaListe = false;
                 }
+
                 break;
 
             case DEMANDE_OUVERTURE_SESSION:
@@ -112,6 +127,8 @@ public class ProtocoleDeCommunication {
                 break;
 
             case ENVOIE_USERSDISTANTS:
+                String toutLesUsagers = messageSurLeReseauRecue[1];
+                this.clavardageManager.accesALaListeDesUsagers().ajouteToutLesUsagers(toutLesUsagers);
                 break;
 
             case FIN_DE_CONNEXION:
@@ -139,34 +156,11 @@ public class ProtocoleDeCommunication {
 
     }
 
-    public int choixPort() {
-
-
-        int localport = 1024;
-        boolean bindIsDone = false;
-
-        ServerSocket server = null ;
-
-        int tentative = 0;
-
-        while (!bindIsDone){
-
-            try{
-
-                localport++;
-                server = new ServerSocket(localport);
-                bindIsDone = true ;
-                server.close();
-            }catch (Exception e){}
-        }
-
-        return localport;
-    }
 
 
     public void demandeDeConnexion(){
-        String AdresseIpDuDemandeurEtSonPort;
-        MessageSurLeReseau demandeDeConnexionMessage = new MessageSurLeReseau(Entete.DEMANDE_DE_CONNEXION, "Vide");
+        String adresseIpDuDemandeurEtPort = this.clavardageManager.userIp()+","+this.clavardageManager.userPort();
+        MessageSurLeReseau demandeDeConnexionMessage = new MessageSurLeReseau(Entete.DEMANDE_DE_CONNEXION, adresseIpDuDemandeurEtPort);
         try {
             udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, PORT_UDP_BROADCAST, demandeDeConnexionMessage);
         } catch (Exception e) {}
@@ -174,7 +168,13 @@ public class ProtocoleDeCommunication {
     }
 
 
-    public void envoieDesUsersDistantAuNouvelEntrant(){
+    public void envoieDesUsersDistantAuNouvelEntrant(String ipAdress, int port){
+
+        String toutLesUsersAsString = this.clavardageManager.accesALaListeDesUsagers().retourneToutLesUsagersAsString();
+
+        MessageSurLeReseau toutLesUsersDistants = new MessageSurLeReseau(Entete.ENVOIE_USERSDISTANTS, toutLesUsersAsString);
+
+        envoieDunMessageEnTCPparIP(ipAdress,port, toutLesUsersDistants);
 
     }
 }
