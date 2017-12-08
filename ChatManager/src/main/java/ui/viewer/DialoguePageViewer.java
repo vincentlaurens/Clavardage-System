@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 
 public class DialoguePageViewer extends JFrame{
-    private DialoguePageController presenter = new DialoguePageController();
+    private DialoguePageController presenter;
     private JTextArea textArea;
     private JTextField inputTextField;
     private JButton sendButton;
@@ -18,6 +18,7 @@ public class DialoguePageViewer extends JFrame{
     public DialoguePageViewer(String pseudo, ChatManager theCM)throws HeadlessException {
         super();
         this.chatManager = theCM;
+        presenter = new DialoguePageController(theCM);
         build(pseudo);
 
 
@@ -39,7 +40,10 @@ public class DialoguePageViewer extends JFrame{
         Box box = Box.createHorizontalBox();
         add(box, BorderLayout.SOUTH);
         inputTextField = new JTextField();
+        inputTextField.addActionListener(e -> presenter.onEnterTouch(inputTextField.getText(), this));
         sendButton = new JButton("Envoyer");
+        sendButton.addActionListener(e -> presenter.onSendButton(inputTextField.getText(), this));
+
         box.add(inputTextField);
         box.add(sendButton);
 
@@ -47,14 +51,20 @@ public class DialoguePageViewer extends JFrame{
 
 
         if(!(this.chatManager.accesALaListeDesUsagers().retourneToutLesUsagers().isEmpty())){
-            int tailleDeLaListeDesUsersCos = chatManager.accesALaListeDesUsagers().retourneToutLesUsagers().size();
 
-            String[] usersCo= new String[tailleDeLaListeDesUsersCos];
-            for (String pseudoUsersCo : usersCo){
-                DefaultMutableTreeNode child = new DefaultMutableTreeNode(pseudoUsersCo);
-                root.add(child);
+            for (String usersCo : this.chatManager.accesALaListeDesUsagers().retourneToutLesUsagers()){
+                String pseudoUsersCo  = this.chatManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(usersCo).getPseudoActuel();
+                System.out.println("Pseudo co : "+ pseudoUsersCo);
+
+                if (!(pseudoUsersCo == this.chatManager.userPseudo())) {
+                    DefaultMutableTreeNode child = new DefaultMutableTreeNode(pseudoUsersCo);
+                    root.add(child);
+                }
             }
             listeUsersConnectes = new JTree(root);
+            listeUsersConnectes.addTreeSelectionListener(e -> presenter.onClickSelection(listeUsersConnectes.getName()));
+
+
             add(new JScrollPane(listeUsersConnectes), BorderLayout.WEST);
         }
 
@@ -66,5 +76,9 @@ public class DialoguePageViewer extends JFrame{
         this.pack();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
+    }
+
+    public void ajoutTextArea(String text) {
+        textArea.append(text);
     }
 }

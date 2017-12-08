@@ -4,6 +4,7 @@ import main.ChatManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class ListeDesUsagers {
@@ -64,5 +65,14 @@ public class ListeDesUsagers {
             this.clavardageManager.accesALaListeDesUsagers().ajouteUnUtilisateurDistantALaListe(nouveauUser);
 
         }
+    }
+
+    public UsersDistants retourneUtilisateurDistantsParSonPseudo(String lePseudo){
+        for (Map.Entry<String, UsersDistants> courant : listeDesUsersParLeurLogin.entrySet()){
+            if(!(courant.getValue().getPseudoActuel() == lePseudo)){
+                return courant.getValue();
+            }
+        }
+        return null;
     }
 }

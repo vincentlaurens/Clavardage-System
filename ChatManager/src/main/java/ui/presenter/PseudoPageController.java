@@ -34,11 +34,13 @@ public class PseudoPageController {
 
     public void onChatOuvertureButtonClicked(String pseudo, JFrame parent) {
         chatManager.addPseudoToUser(pseudo);
+        chatManager.accesALaListeDesUsagers().ajouteUnUtilisateurDistantALaListe(chatManager.returnUserLocal().retourneUserLocalAsDistant());
 
         if (chatManager.accesALaListeDesUsagers().retourneToutLesUsagers() != null){
             this.chatManager.getProtocoleDeCommunication().diffusionDuUserLocal();
         }
         DialoguePageViewer dialoguePageViewer = new DialoguePageViewer(pseudo, this.chatManager);
+        this.chatManager.getProtocoleDeCommunication().diffusionDuUserLocal();
         parent.dispose();
         dialoguePageViewer.display();
     }

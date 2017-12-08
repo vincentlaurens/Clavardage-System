@@ -177,4 +177,7 @@ public class ProtocoleDeCommunication {
         envoieDunMessageEnTCPparIP(ipAdress,port, toutLesUsersDistants);
 
     }
+
+
+
 }

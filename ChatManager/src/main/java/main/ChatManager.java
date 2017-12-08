@@ -57,22 +57,27 @@ public class ChatManager {
 
     public int userPort(){return  this.user.usePortTCP();}
 
+
+    public Sessions useListSessions() {
+        return session;
+    }
+
     public boolean verificationUnicitePseudo(String pseudo) {
         boolean pseudoUnique = true;
-        System.out.println(listeDesUsagers.retourneToutLesUsagers().size());
-        System.out.println(listeDesUsagers.retourneUnUtilisateurDistantParSonLogin("vince").toString());
         if (!(this.listeDesUsagers.retourneToutLesUsagers().size() == 1)) {
             Set<String> usersCo = this.listeDesUsagers.retourneToutLesUsagers();
-            while (pseudoUnique){
-                for (String st: usersCo) {
-                    UsersDistants usersDistantsCourant = this.listeDesUsagers.retourneUnUtilisateurDistantParSonLogin(st);
-                    if (usersDistantsCourant.getPseudoActuel().equals(pseudo)) {
-                        return false;
+            for (String st: usersCo){
+                UsersDistants usersDistantsCourant = this.listeDesUsagers.retourneUnUtilisateurDistantParSonLogin(st);
+                if(!(usersDistantsCourant.getLogin().equals(userLogin()))){
+                    if(usersDistantsCourant.getPseudoActuel().equals(pseudo)){
+                        pseudoUnique = false;
                     }
                 }
+
             }
+
         }
-        return true;
+        return pseudoUnique;
     }
 
     public boolean verificationCasse(String newPseudo) {
