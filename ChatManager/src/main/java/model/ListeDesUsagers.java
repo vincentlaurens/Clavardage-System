@@ -75,4 +75,8 @@ public class ListeDesUsagers {
         }
         return null;
     }
+
+    public void enleveUnUserDistant(String leLoginDuUserDistantQuiSeDeconnecte) {
+        listeDesUsersParLeurLogin.remove(leLoginDuUserDistantQuiSeDeconnecte);
+    }
 }
