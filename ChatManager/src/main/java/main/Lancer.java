@@ -1,6 +1,7 @@
 package main;
 
 import ui.viewer.LoginPageViewer;
+import connectivite.*;
 
 import javax.swing.*;
 

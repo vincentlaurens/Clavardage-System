@@ -19,9 +19,6 @@ public class TCP_ReceptionMessage implements Runnable{
 
         serverSocket = new ServerSocket(port);
         monProtocoleDeCom = leProto;
-        chatSocket = serverSocket.accept();
-        streamInput = new InputStreamReader(chatSocket.getInputStream());
-        reader = new BufferedReader(streamInput);
         new Thread(() -> run()).start();
 
     }
@@ -31,6 +28,9 @@ public class TCP_ReceptionMessage implements Runnable{
         boolean varTrue = true;
         while (varTrue){
             try{
+                chatSocket = serverSocket.accept();
+                streamInput = new InputStreamReader(chatSocket.getInputStream());
+                reader = new BufferedReader(streamInput);
                 String messageRecue = reader.readLine();
                 if( messageRecue != null) {
                     monProtocoleDeCom.onNewIncomingMessage(messageRecue);

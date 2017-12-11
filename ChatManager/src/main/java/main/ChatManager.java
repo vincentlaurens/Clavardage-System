@@ -12,18 +12,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatManager {
-    private ProtocoleDeCommunication protocoleDeCommunication = new ProtocoleDeCommunication(this);
+    private ProtocoleDeCommunication protocoleDeCommunication;
     private final ListeDesUsagers listeDesUsagers;
     private final Sessions session;
     private UserLocal user;
 
 
     public ChatManager(){
+        this.protocoleDeCommunication = new ProtocoleDeCommunication(this);
         this.session = new Sessions();
         this.user = new UserLocal(null, null, "damien", "toto");
         this.listeDesUsagers = new ListeDesUsagers(this);
         protocoleDeCommunication.ecouteDuReseauEnUDP();
-        protocoleDeCommunication.ecouteDuReseauEnTCP(user.usePortTCP());
+        protocoleDeCommunication.ecouteDuReseauEnTCP(userPort());
+
+        System.out.println("Je suis ici");
 
     }
 
