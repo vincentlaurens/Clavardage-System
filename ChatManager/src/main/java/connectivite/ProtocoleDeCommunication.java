@@ -95,7 +95,7 @@ public class ProtocoleDeCommunication {
 
         switch (enteteDuMessageRentrant) {
             case ENVOIE_MESSAGE:
-                clavardageManager.envoieAuDessus(messageSurLeReseauRecue[1]);
+                //clavardageManager.envoieAuDessus(messageSurLeReseauRecue[1]);
 
 
                 break;
@@ -142,7 +142,7 @@ public class ProtocoleDeCommunication {
             case DEMANDE_FIN_SESSION:
                 String leLoginDuUserQuiVeutFermerNotreSession = messageSurLeReseauRecue[1];
                 UsersDistants usersDistantQuiVeutFermerSaSession = clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(leLoginDuUserQuiVeutFermerNotreSession);
-                clavardageManager.useListSessions().finDeSession(usersDistantQuiVeutFermerSaSession);
+                //clavardageManager.useListSessions().finDeSession(usersDistantQuiVeutFermerSaSession);
                 break;
 
             default:

@@ -28,6 +28,7 @@ public class ListeDesUsagers {
         else{
             listeDesUsersParLeurLogin.put(leLoginUserDistant, nouveauUserDistant);
         }
+        System.out.println("j'ai ajouté un usager : "+ leLoginUserDistant);
     }
 
     public UsersDistants retourneUnUtilisateurDistantParSonLogin(String login){

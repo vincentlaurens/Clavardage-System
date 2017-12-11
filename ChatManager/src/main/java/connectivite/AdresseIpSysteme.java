@@ -4,9 +4,8 @@ package connectivite;
 import main.ChatManager;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
+import java.net.*;
+import java.util.Enumeration;
 
 public class AdresseIpSysteme {
 
@@ -15,12 +14,23 @@ public class AdresseIpSysteme {
 
 
     public String ipInterfaceReseauToUser(ChatManager chatManage) throws IOException {
-        InetAddress inetadr = InetAddress.getLocalHost();
-        if(inetadr.isLinkLocalAddress()) {
-            throw new UnknownHostException("Pas d'adresse Ip exploitable!!! Connectez-vous");
-
+        Enumeration<NetworkInterface> interfaces = null;
+        try {
+            interfaces = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
-        this.adresseIPLocale = inetadr.getHostAddress();
+        while (interfaces.hasMoreElements()) {
+            NetworkInterface currentInterface = interfaces.nextElement();
+            Enumeration<InetAddress> addresses = currentInterface.getInetAddresses();
+            while (addresses.hasMoreElements()) {
+                InetAddress currentAddress = addresses.nextElement();
+                if(currentAddress.isSiteLocalAddress()){
+                    adresseIPLocale = currentAddress.getHostAddress();
+
+                }
+            }
+        }
 
         chatManage.addIpadressToUser(this.adresseIPLocale);
         return chatManage.userIp();
