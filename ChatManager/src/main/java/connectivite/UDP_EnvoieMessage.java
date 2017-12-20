@@ -6,7 +6,7 @@ import java.net.InetAddress;
 
 public class UDP_EnvoieMessage {
 
-    public void sendMessageOn(String ipAddress, int port, MessageSurLeReseau messageToSend) throws Exception {
+    public void sendMessageOn(int port, MessageSurLeReseau messageToSend) throws Exception {
 
         byte[] data;
 
@@ -14,8 +14,12 @@ public class UDP_EnvoieMessage {
 
         DatagramSocket datagramSocket = new DatagramSocket();
 
+        datagramSocket.setBroadcast(true);
+
+        String  broadcastAddress = AdresseIpSysteme.getBroadcastAddress();
+
         DatagramPacket datagramPacket = new DatagramPacket(data, data.length);
-        datagramPacket.setAddress(InetAddress.getByName(ipAddress));
+        datagramPacket.setAddress(InetAddress.getByName(broadcastAddress));
         datagramPacket.setPort(port);
         datagramSocket.send(datagramPacket);
         datagramSocket.close();

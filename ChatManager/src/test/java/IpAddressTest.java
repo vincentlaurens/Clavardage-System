@@ -25,6 +25,15 @@ public class IpAddressTest {
         }
     }
 
+    @Test
+    public void testBroadcast(){
+
+        AdresseIpSysteme aip = new AdresseIpSysteme();
+
+        aip.getBroadcastAddress();
+    }
+
+
 
 
 }

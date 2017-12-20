@@ -21,7 +21,7 @@ public class ProtocoleDeCommunication {
     private UDP_EnvoieMessage udp_envoieMessage;
 
 
-    private static final String BROADCAST_ADDRESS = "255.255.255.255";
+
     private static final int PORT_UDP_BROADCAST = 10000;
 
 
@@ -74,12 +74,11 @@ public class ProtocoleDeCommunication {
         if (!(loginDestinaire.size() == 0)) {
             for (String st : loginDestinaire) {
                 UsersDistants usersDestinataire = this.clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(st);
-                String ipAddress = usersDestinataire.getAdresseIP();
                 int portDistant = usersDestinataire.getPortDistant();
 
                 udp_envoieMessage = new UDP_EnvoieMessage();
                 try {
-                    udp_envoieMessage.sendMessageOn(ipAddress, portDistant, messageToSend);
+                    udp_envoieMessage.sendMessageOn(portDistant, messageToSend);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -174,7 +173,7 @@ public class ProtocoleDeCommunication {
         MessageSurLeReseau demandeDeConnexionMessage = new MessageSurLeReseau(Entete.DEMANDE_DE_CONNEXION, adresseIpDuDemandeurEtPort);
         udp_envoieMessage = new UDP_EnvoieMessage();
         try {
-            udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, PORT_UDP_BROADCAST, demandeDeConnexionMessage);
+            udp_envoieMessage.sendMessageOn( PORT_UDP_BROADCAST, demandeDeConnexionMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -212,7 +211,7 @@ public class ProtocoleDeCommunication {
         udp_envoieMessage = new UDP_EnvoieMessage();
         try {
 
-            udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, PORT_UDP_BROADCAST, finDeConnexion);
+            udp_envoieMessage.sendMessageOn(PORT_UDP_BROADCAST, finDeConnexion);
         } catch (Exception e) {
 
         }

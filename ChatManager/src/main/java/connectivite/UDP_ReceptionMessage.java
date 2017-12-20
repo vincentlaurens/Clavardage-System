@@ -29,6 +29,7 @@ public class UDP_ReceptionMessage implements Runnable {
         boolean uneVariablaAtrue = true;
         while (uneVariablaAtrue) {
             try {
+
                 datagramSocket.receive(datagramPacket);
                 String message = new String(datagramPacket.getData(), datagramPacket.getOffset(), datagramPacket.getLength());
                 monProtocoleDeCom.onNewIncomingMessage(message);

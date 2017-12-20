@@ -6,10 +6,13 @@ import main.ChatManager;
 import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
 public class AdresseIpSysteme {
 
     private String adresseIPLocale ;
+
 
 
 
@@ -57,6 +60,34 @@ public class AdresseIpSysteme {
         }
         return localport;
 
+    }
+
+    public static String getBroadcastAddress(){
+        Enumeration<NetworkInterface> interfaces = null;
+        try {
+            interfaces = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        InetAddress broadcastAddress = null;
+
+        while (interfaces.hasMoreElements()) {
+            NetworkInterface currentInterface = interfaces.nextElement();
+            List<InterfaceAddress> listInterfaceAddresses = currentInterface.getInterfaceAddresses();
+            Iterator<InterfaceAddress> interfaceAddressIterator = listInterfaceAddresses.iterator();
+
+            while (interfaceAddressIterator.hasNext()) {
+                InterfaceAddress ia = interfaceAddressIterator.next();
+                if(ia.getBroadcast() != null){
+                    broadcastAddress = ia.getBroadcast();
+
+                }
+
+
+
+            }
+        }
+        return broadcastAddress.getHostName();
     }
 
 }
