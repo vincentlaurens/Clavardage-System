@@ -27,7 +27,9 @@ public class MessageSurLeReseau {
     @Override
     public String toString() {
 
-        return entete+"$"+contenu;
+        String enteteAsString = entete.toString();
+
+        return enteteAsString+"$"+contenu;
     }
 
     public byte[] getBytes(){

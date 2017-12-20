@@ -29,6 +29,7 @@ public class DialoguePageController {
         chatManager.useListSessions().addUserDistantToSession(newUserDistant);
         System.out.println("Après ajout : ");
         chatManager.useListSessions().afficheListeSessions();
+        System.out.println("Liste des usagers dans la table :" +chatManager.accesALaListeDesUsagers().retourneToutLesUsagersAsString());
     }
 }
 

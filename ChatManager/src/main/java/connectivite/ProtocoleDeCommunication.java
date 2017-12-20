@@ -90,7 +90,10 @@ public class ProtocoleDeCommunication {
     }
 
     public void onNewIncomingMessage(String messageRecue) {
+        System.out.println(messageRecue);
+        System.out.println(clavardageManager.accesALaListeDesUsagers().retourneToutLesUsagersAsString());
         String[] messageSurLeReseauRecue = messageRecue.split("[$]", 2);
+        System.out.println(messageSurLeReseauRecue[0]+ " "+messageSurLeReseauRecue[1]);
         Entete enteteDuMessageRentrant = Entete.valueOf(messageSurLeReseauRecue[0]);
 
         switch (enteteDuMessageRentrant) {
@@ -169,9 +172,13 @@ public class ProtocoleDeCommunication {
     public void demandeDeConnexion(){
         String adresseIpDuDemandeurEtPort = this.clavardageManager.userIp()+","+this.clavardageManager.userPort();
         MessageSurLeReseau demandeDeConnexionMessage = new MessageSurLeReseau(Entete.DEMANDE_DE_CONNEXION, adresseIpDuDemandeurEtPort);
+        udp_envoieMessage = new UDP_EnvoieMessage();
         try {
             udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, PORT_UDP_BROADCAST, demandeDeConnexionMessage);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -183,7 +190,6 @@ public class ProtocoleDeCommunication {
         MessageSurLeReseau toutLesUsersDistants = new MessageSurLeReseau(Entete.ENVOIE_USERSDISTANTS, toutLesUsersAsString);
 
         envoieDunMessageEnTCPparIP(ipAdress,port, toutLesUsersDistants);
-
     }
 
     public void envoieDeDemandeDeSession(String leLoginDeCeluiAQuiOnVeutParler){
@@ -196,15 +202,16 @@ public class ProtocoleDeCommunication {
         MessageSurLeReseau demandeDeSession = new MessageSurLeReseau(Entete.DEMANDE_OUVERTURE_SESSION, leLoginUserLocal);
 
         try {
-            tcp_envoieMessage.sendMessageOn(ipAdressDistant, portDistant, demandeDeSession);
+            envoieDunMessageEnTCP(leLoginDeCeluiAQuiOnVeutParler, demandeDeSession);
         } catch (Exception e) {        }
     }
 
     public void envoieDeFinDeConnexion(){
         String userLocalQuiSortDuSystemeDeChat = clavardageManager.userLogin();
         MessageSurLeReseau finDeConnexion = new MessageSurLeReseau(Entete.FIN_DE_CONNEXION, userLocalQuiSortDuSystemeDeChat);
-
+        udp_envoieMessage = new UDP_EnvoieMessage();
         try {
+
             udp_envoieMessage.sendMessageOn(BROADCAST_ADDRESS, PORT_UDP_BROADCAST, finDeConnexion);
         } catch (Exception e) {
 
@@ -212,16 +219,13 @@ public class ProtocoleDeCommunication {
     }
 
     public void envoieDeFinDeSession(String loginUserDistant){
-        UsersDistants userAvecQuiOnDiscutaitEtOnNeLeVeutPlus= clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(loginUserDistant);
-        String ipAddressDist = userAvecQuiOnDiscutaitEtOnNeLeVeutPlus.getAdresseIP();
-        int portDistant = userAvecQuiOnDiscutaitEtOnNeLeVeutPlus.getPortDistant();
 
         String monLoginLocal = clavardageManager.userLogin();
 
         MessageSurLeReseau finDeSession = new MessageSurLeReseau(Entete.DEMANDE_FIN_SESSION, monLoginLocal);
 
         try {
-            tcp_envoieMessage.sendMessageOn(ipAddressDist, portDistant, finDeSession);
+            envoieDunMessageEnTCP(loginUserDistant, finDeSession);
         } catch (Exception e) {
         }
 

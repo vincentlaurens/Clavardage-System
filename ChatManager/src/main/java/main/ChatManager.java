@@ -21,12 +21,10 @@ public class ChatManager {
     public ChatManager(){
         this.protocoleDeCommunication = new ProtocoleDeCommunication(this);
         this.session = new Sessions();
-        this.user = new UserLocal(null, null, "damien", "toto");
+        this.user = new UserLocal(null, null, "PartezDuPort", "d");
         this.listeDesUsagers = new ListeDesUsagers(this);
         protocoleDeCommunication.ecouteDuReseauEnUDP();
         protocoleDeCommunication.ecouteDuReseauEnTCP(userPort());
-
-        System.out.println("Je suis ici");
 
     }
 

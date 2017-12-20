@@ -1,7 +1,6 @@
 package connectivite;
 
 public enum Entete {
-
     ENVOIE_MESSAGE,
     DEMANDE_DE_CONNEXION,
     DEMANDE_OUVERTURE_SESSION,

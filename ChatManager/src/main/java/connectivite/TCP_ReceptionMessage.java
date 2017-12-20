@@ -35,7 +35,6 @@ public class TCP_ReceptionMessage implements Runnable{
                 if( messageRecue != null) {
                     monProtocoleDeCom.onNewIncomingMessage(messageRecue);
 
-
                 }
             }catch (IOException e){
                 e.printStackTrace();
