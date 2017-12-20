@@ -64,7 +64,11 @@ public class PseudoPageViewer extends JDialog {
 
         textFieldIp = new JTextField(10);
         textFieldIp.setEditable(false);
+
         try {
+            if(ipSysteme.ipInterfaceReseauToUser(chatManager).isEmpty()){
+                erreurPage.WarningViewer("Veuillez-vous connecter au réseau");
+            }
             textFieldIp.setText(ipSysteme.ipInterfaceReseauToUser(chatManager));
         } catch ( IOException e ) {
             e.printStackTrace();
