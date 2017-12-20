@@ -89,10 +89,7 @@ public class ProtocoleDeCommunication {
     }
 
     public void onNewIncomingMessage(String messageRecue) {
-        System.out.println(messageRecue);
-        System.out.println(clavardageManager.accesALaListeDesUsagers().retourneToutLesUsagersAsString());
         String[] messageSurLeReseauRecue = messageRecue.split("[$]", 2);
-        System.out.println(messageSurLeReseauRecue[0]+ " "+messageSurLeReseauRecue[1]);
         Entete enteteDuMessageRentrant = Entete.valueOf(messageSurLeReseauRecue[0]);
 
         switch (enteteDuMessageRentrant) {
@@ -110,15 +107,19 @@ public class ProtocoleDeCommunication {
                 int portDistant = Integer.parseInt(attributDesUserDistantAsString[3]);
                 UsersDistants userDistant = new UsersDistants(loginUserDistant, ipUserDistant, pseudoUserDistant, portDistant);
                 clavardageManager.accesALaListeDesUsagers().ajouteUnUtilisateurDistantALaListe(userDistant);
+                System.out.println("J'ai ajouté un user distant");
                 break;
 
             case DEMANDE_DE_CONNEXION:
                 if (dernierSurLaListe){
                     String ipAddressUserDistantEtPort[] = messageSurLeReseauRecue[1].split("[,]");
                     String ipAddress = ipAddressUserDistantEtPort[0];
-                    int port = Integer.parseInt(ipAddressUserDistantEtPort[1]);
-                    envoieDesUsersDistantAuNouvelEntrant(ipAddress, port);
-                    dernierSurLaListe = false;
+                    if(ipAddress.equals(clavardageManager.userIp())) {
+                        int port = Integer.parseInt(ipAddressUserDistantEtPort[1]);
+                        envoieDesUsersDistantAuNouvelEntrant(ipAddress, port);
+                        dernierSurLaListe = false;
+                        System.out.println("J'ai envoyé ma liste de users distants");
+                    }
                 }
 
                 break;
@@ -163,7 +164,7 @@ public class ProtocoleDeCommunication {
 
 
         envoieDunMessageEnUDP(toutLesUtilisateurConnecte, messageSurLeReseau);
-
+        System.out.println("j'ai envoyé mon user local");
     }
 
 
@@ -177,26 +178,24 @@ public class ProtocoleDeCommunication {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        System.out.println("Demande de connexion");
 
     }
 
 
     public void envoieDesUsersDistantAuNouvelEntrant(String ipAdress, int port){
+        if(!ipAdress.equals(clavardageManager.userIp())) {
+            String toutLesUsersAsString = this.clavardageManager.accesALaListeDesUsagers().retourneToutLesUsagersAsString();
 
-        String toutLesUsersAsString = this.clavardageManager.accesALaListeDesUsagers().retourneToutLesUsagersAsString();
+            MessageSurLeReseau toutLesUsersDistants = new MessageSurLeReseau(Entete.ENVOIE_USERSDISTANTS, toutLesUsersAsString);
 
-        MessageSurLeReseau toutLesUsersDistants = new MessageSurLeReseau(Entete.ENVOIE_USERSDISTANTS, toutLesUsersAsString);
-
-        envoieDunMessageEnTCPparIP(ipAdress,port, toutLesUsersDistants);
+            envoieDunMessageEnTCPparIP(ipAdress, port, toutLesUsersDistants);
+        }
     }
 
     public void envoieDeDemandeDeSession(String leLoginDeCeluiAQuiOnVeutParler){
 
         String leLoginUserLocal = clavardageManager.userLogin();
-        UsersDistants theUserDistant = clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(leLoginDeCeluiAQuiOnVeutParler);
-        String ipAdressDistant = theUserDistant.getAdresseIP();
-        int portDistant = theUserDistant.getPortDistant();
 
         MessageSurLeReseau demandeDeSession = new MessageSurLeReseau(Entete.DEMANDE_OUVERTURE_SESSION, leLoginUserLocal);
 

@@ -39,8 +39,7 @@ public class PseudoPageController {
         if (chatManager.accesALaListeDesUsagers().retourneToutLesUsagers() != null){
             this.chatManager.getProtocoleDeCommunication().diffusionDuUserLocal();
         }
-        DialoguePageViewer dialoguePageViewer = new DialoguePageViewer(pseudo, this.chatManager);
-        this.chatManager.getProtocoleDeCommunication().diffusionDuUserLocal();
+        DialoguePageViewer dialoguePageViewer = new DialoguePageViewer(this.chatManager);
         parent.dispose();
         dialoguePageViewer.display();
     }
