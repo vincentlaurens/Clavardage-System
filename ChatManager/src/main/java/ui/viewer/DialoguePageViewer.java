@@ -62,9 +62,13 @@ public class DialoguePageViewer extends JFrame{
         chatBox.add(box);
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Utilisateurs Connectés");
+        presenter.actualiserMenuUsersCo(root);
+
+
         listeUsersConnectes = new JTree(root);
+
         listeUsersConnectes.setScrollsOnExpand(true);
-        presenter.actualiserMenuUsersCo(root, listeUsersConnectes);
+        listeUsersConnectes.updateUI();
         listeUsersConnectes.addTreeSelectionListener(e -> presenter.onClickSelectionUserCo(listeUsersConnectes.getName(),root, listeSessions) );
 
         DefaultMutableTreeNode rootSession = new DefaultMutableTreeNode("Sessions Actives");
@@ -80,7 +84,7 @@ public class DialoguePageViewer extends JFrame{
         listePane.add(listeUsersConnectes);
 
         JButton ActualiseUsersCoButton = new JButton("Actualiser");
-        ActualiseUsersCoButton.addActionListener(e -> presenter.actualiserMenuUsersCo(root, listeUsersConnectes));
+        ActualiseUsersCoButton.addActionListener(e -> presenter.actualiserMenuUsersCo(root));
 
         Box userCoBox = Box.createVerticalBox();
         userCoBox.add(listePane);
@@ -91,7 +95,7 @@ public class DialoguePageViewer extends JFrame{
         sessionsPane.add(listeSessions);
 
         JButton stopSessionButton = new JButton("Stop");
-        ActualiseUsersCoButton.addActionListener(e -> presenter.onClickStopButtonSession(listeSessions, listeSessions.getName()));
+        stopSessionButton.addActionListener(e -> presenter.onClickStopButtonSession(listeSessions, listeSessions.getName()));
         stopSessionButton.setEnabled(false);
 
         Box sessionsBox = Box.createVerticalBox();

@@ -50,7 +50,7 @@ public class DialoguePageController {
 
     }
 
-    public void actualiserMenuUsersCo(DefaultMutableTreeNode root, JTree listeUsersCo) {
+    public void actualiserMenuUsersCo(DefaultMutableTreeNode root) {
         if (!(this.chatManager.accesALaListeDesUsagers().retourneToutLesUsagers().isEmpty())) {
 
             for (String usersCo : this.chatManager.accesALaListeDesUsagers().retourneToutLesUsagers()) {
@@ -62,7 +62,7 @@ public class DialoguePageController {
                     root.add(child);
                 }
             }
-            listeUsersCo.updateUI();
+
         }
     }
 
