@@ -71,9 +71,12 @@ public class ChatManager {
             Set<String> usersCo = this.listeDesUsagers.retourneToutLesUsagers();
             for (String st: usersCo){
                 UsersDistants usersDistantsCourant = this.listeDesUsagers.retourneUnUtilisateurDistantParSonLogin(st);
-                if(!(usersDistantsCourant.getLogin().equals(userLogin()))){
-                    if(usersDistantsCourant.getPseudoActuel().equals(pseudo)){
-                        pseudoUnique = false;
+                if(usersDistantsCourant.getLogin() != null) {
+                    if (!(usersDistantsCourant.getLogin().equals(userLogin()))) {
+
+                        if (usersDistantsCourant.getPseudoActuel().equals(pseudo)) {
+                            pseudoUnique = false;
+                        }
                     }
                 }
 

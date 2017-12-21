@@ -111,14 +111,18 @@ public class ProtocoleDeCommunication {
                 break;
 
             case DEMANDE_DE_CONNEXION:
+                String loginIpAddressEtPortUserDistant[] = messageSurLeReseauRecue[1].split("[,]");
+                String loginDistant = loginIpAddressEtPortUserDistant[0];
+                String ipAddress = loginIpAddressEtPortUserDistant[1];
+                int port = Integer.parseInt(loginIpAddressEtPortUserDistant[2]);
+                UsersDistants newUserDistant = new UsersDistants(loginDistant, ipAddress, null, port);
+                clavardageManager.accesALaListeDesUsagers().ajouteUnUtilisateurDistantALaListe(newUserDistant);
                 if (dernierSurLaListe){
-                    String ipAddressUserDistantEtPort[] = messageSurLeReseauRecue[1].split("[,]");
-                    String ipAddress = ipAddressUserDistantEtPort[0];
-                    if(ipAddress.equals(clavardageManager.userIp())) {
-                        int port = Integer.parseInt(ipAddressUserDistantEtPort[1]);
+                    System.out.println("J'ai reçu une demande de connexion de la part de "+ ipAddress + " "+ loginDistant );
+                    if(!ipAddress.equals(clavardageManager.userIp())) {
                         envoieDesUsersDistantAuNouvelEntrant(ipAddress, port);
                         dernierSurLaListe = false;
-                        System.out.println("J'ai envoyé ma liste de users distants");
+                        System.out.println("J'ai envoyé ma liste à l'user distant");
                     }
                 }
 
@@ -164,13 +168,14 @@ public class ProtocoleDeCommunication {
 
 
         envoieDunMessageEnUDP(toutLesUtilisateurConnecte, messageSurLeReseau);
-        System.out.println("j'ai envoyé mon user local");
+        System.out.println("J'ai envoyé mon user local");
+
     }
 
 
 
     public void demandeDeConnexion(){
-        String adresseIpDuDemandeurEtPort = this.clavardageManager.userIp()+","+this.clavardageManager.userPort();
+        String adresseIpDuDemandeurEtPort = this.clavardageManager.userLogin()+","+this.clavardageManager.userIp()+","+this.clavardageManager.userPort();
         MessageSurLeReseau demandeDeConnexionMessage = new MessageSurLeReseau(Entete.DEMANDE_DE_CONNEXION, adresseIpDuDemandeurEtPort);
         udp_envoieMessage = new UDP_EnvoieMessage();
         try {
@@ -178,7 +183,9 @@ public class ProtocoleDeCommunication {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Demande de connexion");
+
+        System.out.println("J'ai fait une demande de connexion");
+
 
     }
 
@@ -228,6 +235,19 @@ public class ProtocoleDeCommunication {
         }
 
 
+    }
+
+    public void envoieMessage(String loginDeLUtilisateurAQuiOnEnvoieLeMessage, String leMessage){
+        String messageToSend = leMessage;
+        messageToSend = messageToSend +","+clavardageManager.userLogin();
+
+        MessageSurLeReseau messageSurLeReseau = new MessageSurLeReseau(Entete.ENVOIE_MESSAGE, messageToSend);
+
+        try {
+            envoieDunMessageEnTCP(loginDeLUtilisateurAQuiOnEnvoieLeMessage, messageSurLeReseau);
+        }catch (Exception e){
+
+        }
     }
 
 
