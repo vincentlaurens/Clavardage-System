@@ -86,9 +86,14 @@ public class DialoguePageViewer extends JFrame{
         JButton ActualiseUsersCoButton = new JButton("Actualiser");
         ActualiseUsersCoButton.addActionListener(e -> presenter.actualiserMenuUsersCo(root));
 
+        JButton montreToutLesUsersDeLaHash = new JButton("Show");
+        montreToutLesUsersDeLaHash.addActionListener(e -> presenter.show());
+
+
         Box userCoBox = Box.createVerticalBox();
         userCoBox.add(listePane);
         userCoBox.add(ActualiseUsersCoButton);
+        userCoBox.add(montreToutLesUsersDeLaHash);
 
         JPanel sessionsPane = new JPanel();
         sessionsPane.setBackground(Color.WHITE);
