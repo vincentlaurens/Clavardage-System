@@ -61,7 +61,7 @@ public class ChatManager {
     public int userPort(){return  this.user.usePortTCP();}
 
 
-    public Sessions useListSessions() {
+    public Sessions useSessions() {
         return session;
     }
 
@@ -98,9 +98,10 @@ public class ChatManager {
         return true;
     }
 
-    public void defenieSessionCourante(String pseudoUtilisateurDistantEnChat) {
-        UsersDistants utilisateurDistantEnChat = listeDesUsagers.retourneUtilisateurDistantsParSonPseudo(pseudoUtilisateurDistantEnChat);
-        session.definieUserDistantCourant(utilisateurDistantEnChat);
+    public void defenieSessionCourante(UsersDistants usersDistants) {
+        if(usersDistants != null) {
+            session.definieUserDistantCourant(usersDistants);
+        }
     }
 
     public UsersDistants useSessionCourante(){

@@ -25,23 +25,21 @@ import java.util.regex.*;
 public class MessageHistorique {
     private static final int TAILLE_LISTE = 10;
     private final File repertoire;
-
     private static HashMap<String, File> listeFichiers;
     private static final String PATH = ".\\src\\main\\HistoriqueDossier\\";
     private final ChatManager chatManager;
-    private final Sessions session;
     private File fichierSessionHistorique;
 
 
-    public MessageHistorique(Sessions session, ChatManager theCM) {
+    public MessageHistorique(ChatManager theCM) {
         repertoire = new File(PATH);
         chatManager = theCM;
         listeFichiers = new HashMap<String, File>();
-        this.session = session;
+
 
     }
     public String toString() {
-        return PATH+chatManager.userLogin()+"_"+session.userDistantSessionCourante().getLogin()+".txt";
+        return PATH+chatManager.userLogin()+"_"+chatManager.useSessions().userDistantSessionCourante().getLogin()+".txt";
     }
 
     public void creerFichier() throws IOException, NotFileException {
@@ -60,11 +58,11 @@ public class MessageHistorique {
         switch (moment){
 
             case MESSAGE_ENVOYE:
-                message_prepare =  chatManager.userPseudo() + "-"+ session.userDistantSessionCourante().getPseudoActuel() + ":" + LocalDateTime.now() + ":" + message ;
+                message_prepare =  chatManager.userPseudo() + "-"+ chatManager.useSessions().userDistantSessionCourante().getPseudoActuel() + ":" + LocalDateTime.now() + ":" + message ;
                 break;
 
             case MESSAGE_RECU:
-                message_prepare =  session.userDistantSessionCourante().getPseudoActuel() + "-"+ chatManager.userPseudo() + ":" + LocalDateTime.now() + ":" + message ;
+                message_prepare =  chatManager.useSessions().userDistantSessionCourante().getPseudoActuel() + "-"+ chatManager.userPseudo() + ":" + LocalDateTime.now() + ":" + message ;
                 break;
             default:
                 throw new IOException("Ecriture failed");
@@ -151,8 +149,5 @@ public class MessageHistorique {
 
         }
 
-    }
-    public Sessions getSession(){
-        return session;
     }
 }

@@ -3,6 +3,7 @@ package ui.presenter;
 
 
 import main.ChatManager;
+import model.Sessions;
 import ui.viewer.ErrorViewer;
 import ui.viewer.PseudoPageViewer;
 
@@ -44,7 +45,7 @@ public class LoginPageController {
             errorViewer.WarningViewer("Le mot de passe renseigné est incorrect!!!!!");
         }else{
             PseudoPageViewer pseudoPage = new PseudoPageViewer(parent, this.chatManager);
-            this.chatManager.getProtocoleDeCommunication().demandeDeConnexion();
+            chatManager.getProtocoleDeCommunication().demandeDeConnexion();
             parent.dispose();
             pseudoPage.afficherPage();
 

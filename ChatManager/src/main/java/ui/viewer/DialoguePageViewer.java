@@ -6,7 +6,10 @@ import ui.presenter.DialoguePageController;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+
+import static javax.swing.tree.TreeSelectionModel.SINGLE_TREE_SELECTION;
 
 public class DialoguePageViewer extends JFrame{
     private DialoguePageController presenter;
@@ -15,8 +18,6 @@ public class DialoguePageViewer extends JFrame{
     private JButton sendButton;
     private JTree listeUsersConnectes, listeSessions;
     private ChatManager chatManager;
-    private GridBagConstraints cs;
-    private JSplitPane splitPane;
 
     public DialoguePageViewer(ChatManager theCM)throws HeadlessException {
         this.chatManager = theCM;
@@ -61,18 +62,15 @@ public class DialoguePageViewer extends JFrame{
         chatBox.add(textPane);
         chatBox.add(box);
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Utilisateurs Connectés");
-        presenter.actualiserMenuUsersCo(root);
 
+        DefaultMutableTreeNode root = presenter.actualiserMenuUsersCo();
 
         listeUsersConnectes = new JTree(root);
-
         listeUsersConnectes.setScrollsOnExpand(true);
         listeUsersConnectes.updateUI();
-        listeUsersConnectes.addTreeSelectionListener(e -> presenter.onClickSelectionUserCo(listeUsersConnectes.getName(),root, listeSessions) );
+        listeUsersConnectes.addTreeSelectionListener(e -> presenter.onClickSelectionUserCo(listeUsersConnectes.getSelectionPath()));
 
-        DefaultMutableTreeNode rootSession = new DefaultMutableTreeNode("Sessions Actives");
-        presenter.actualiserMenuSessions(rootSession);
+        DefaultMutableTreeNode rootSession = presenter.actualiserMenuSessions();
         listeSessions = new JTree(rootSession);
         listeSessions.setScrollsOnExpand(true);
 
@@ -85,7 +83,7 @@ public class DialoguePageViewer extends JFrame{
         listePane.add(listeUsersConnectes);
 
         JButton ActualiseUsersCoButton = new JButton("Actualiser");
-        ActualiseUsersCoButton.addActionListener(e -> presenter.actualiserMenuUsersCo(root));
+        ActualiseUsersCoButton.addActionListener(e -> presenter.actualiserMenuUsersCo());
 
 
 
@@ -98,7 +96,7 @@ public class DialoguePageViewer extends JFrame{
         sessionsPane.setBackground(Color.WHITE);
         sessionsPane.add(listeSessions);
 
-        JButton stopSessionButton = new JButton("Stop");
+        JButton stopSessionButton = new JButton("Déconnexion");
         stopSessionButton.addActionListener(e -> presenter.onClickStopButtonSession(listeSessions, listeSessions.getName()));
         stopSessionButton.setEnabled(false);
 

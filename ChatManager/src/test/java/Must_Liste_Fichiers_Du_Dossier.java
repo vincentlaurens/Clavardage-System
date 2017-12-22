@@ -26,7 +26,7 @@ public class Must_Liste_Fichiers_Du_Dossier {
         UsersDistants user = new UsersDistants("toto", "localhost", "titi", 1045);
         String fichierATrouver = "vince_toto.txt";
         String message = "Salut ça va !!!!!";
-        monMessageHistorique = new MessageHistorique(theCM.useListSessions(), theCM);
+        monMessageHistorique = new MessageHistorique(theCM);
 
         try {
             monMessageHistorique.creerFichier();

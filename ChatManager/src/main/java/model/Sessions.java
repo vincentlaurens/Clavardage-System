@@ -4,56 +4,42 @@ import historique.MessageHistorique;
 import main.ChatManager;
 
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Sessions {
 
     private final ChatManager chatManager;
     private UsersDistants sessionEnCoursDeChat;
-    private ArrayList<UsersDistants> listeSessions;
-    private ArrayList<MessageHistorique> messageHistoriques;
+    private HashMap<UsersDistants, MessageHistorique> listeSessions;
 
     public Sessions(ChatManager theChatManager){
         chatManager = theChatManager;
-        listeSessions = new ArrayList<>();
-        messageHistoriques = new ArrayList<>();
-        sessionEnCoursDeChat = null;
-
+        listeSessions = new HashMap<>();
     }
 
-    public void addUserDistantToSession(UsersDistants usersDistants){
-        listeSessions.add(usersDistants);
-        MessageHistorique nouveauMessageHistorique = new MessageHistorique(chatManager.useListSessions(), chatManager);
-        messageHistoriques.add(nouveauMessageHistorique);
+    public void addUserDistantToSession(UsersDistants usersDistants) {
+        MessageHistorique messageHistorique = new MessageHistorique(chatManager);
+        if (!listeSessions.containsKey(usersDistants)){
+            listeSessions.put(usersDistants, messageHistorique);
+        }
     }
 
     public void afficheListeSessions() {
-        for (UsersDistants courant : listeSessions) {
-            System.out.println(courant.getPseudoActuel());
-
+        if(!listeSessions.isEmpty()) {
+            listeSessions.toString();
         }
     }
 
-
-    public MessageHistorique retrouveUnHistoriqueParSonUser(String loginUser){
-        MessageHistorique messageHistoriqueVoulu = null;
-        for (MessageHistorique mshist : messageHistoriques){
-             if(mshist.getSession().userDistantSessionCourante().getLogin().equals(loginUser)){
-                 messageHistoriqueVoulu = mshist;
-             }
-        }
-        return messageHistoriqueVoulu;
-
-    }
-
-    public ArrayList<UsersDistants> retourneListeSessions(){
+    public HashMap<UsersDistants, MessageHistorique> retourneListeSessions(){
         return listeSessions;
     }
 
-    public void removeUserDistantOfSession(String pseudo) {
+    public void removeUserDistantOfSession(UsersDistants userARemove) {
+        listeSessions.remove(userARemove);
     }
 
     public void definieUserDistantCourant(UsersDistants utilisateurDistantEnChat) {
+        System.out.println("definieUserDistantCourant "+utilisateurDistantEnChat.toString());
         sessionEnCoursDeChat = utilisateurDistantEnChat;
     }
 

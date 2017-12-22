@@ -102,7 +102,7 @@ public class ProtocoleDeCommunication {
                 String[] messageEtCeluiQuiTeParleAsTab = messageEtCeluiQuiTeParleAsString.split("[,]");
                 String celuiQuiTeParle = messageEtCeluiQuiTeParleAsTab[0];
                 String message = messageEtCeluiQuiTeParleAsTab[1];
-                MessageHistorique theMessageHistorique = clavardageManager.useListSessions().retrouveUnHistoriqueParSonUser(celuiQuiTeParle);
+                MessageHistorique theMessageHistorique = new MessageHistorique(clavardageManager);//clavardageManager.useListSessions().retrouveUnHistoriqueParSonUser(celuiQuiTeParle);
                 try {
                     theMessageHistorique.ecriturefichier(MomentEcriture.MESSAGE_ENVOYE, message);
                 } catch (IOException e) {
@@ -124,7 +124,7 @@ public class ProtocoleDeCommunication {
                 break;
 
             case DEMANDE_DE_CONNEXION:
-                String loginIpAddressEtPortUserDistant[] = messageSurLeReseauRecue[2].split("[,]");
+                String loginIpAddressEtPortUserDistant[] = messageSurLeReseauRecue[1].split("[,]");
                 String loginDistant = loginIpAddressEtPortUserDistant[0];
                 String ipAddress = loginIpAddressEtPortUserDistant[1];
                 int port = Integer.parseInt(loginIpAddressEtPortUserDistant[2]);
@@ -144,8 +144,10 @@ public class ProtocoleDeCommunication {
             case DEMANDE_OUVERTURE_SESSION:
                 String loginUserDistantQuiVeutParlerAvecMoi = messageSurLeReseauRecue[1];
                 UsersDistants theUserQuiVeutParlerAvecMoi = clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(loginUserDistantQuiVeutParlerAvecMoi);
-                clavardageManager.useListSessions().addUserDistantToSession(theUserQuiVeutParlerAvecMoi);
-                MessageHistorique messageHistorique = clavardageManager.useListSessions().retrouveUnHistoriqueParSonUser(theUserQuiVeutParlerAvecMoi.getLogin());
+                clavardageManager.useSessions().addUserDistantToSession(theUserQuiVeutParlerAvecMoi);
+                System.out.println("Demande ouverture de session "+ clavardageManager.useSessionCourante());
+                MessageHistorique messageHistorique = new MessageHistorique(clavardageManager);//clavardageManager.useListSessions().retrouveUnHistoriqueParSonUser(theUserQuiVeutParlerAvecMoi.getLogin());
+                System.out.println(messageHistorique.findfichier().getAbsolutePath());
                 messageHistorique.lireFichier(messageHistorique.findfichier().getAbsolutePath());
                 System.out.println("j'ai créé le fichier"+messageHistorique.findfichier().getAbsolutePath());
                 break;

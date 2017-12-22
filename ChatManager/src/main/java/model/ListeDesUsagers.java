@@ -2,10 +2,7 @@ package model;
 
 import main.ChatManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ListeDesUsagers {
 
@@ -70,7 +67,9 @@ public class ListeDesUsagers {
 
     public UsersDistants retourneUtilisateurDistantsParSonPseudo(String lePseudo){
         for (Map.Entry<String, UsersDistants> courant : listeDesUsersParLeurLogin.entrySet()){
-            if(!(courant.getValue().getPseudoActuel() == lePseudo)){
+            System.out.println("dans retourneUtilisateurDistantsParSonPseudo"+ lePseudo + courant.getValue().getPseudoActuel());
+            if(lePseudo.equals(courant.getValue().getPseudoActuel())){
+                System.out.println("dans retourneUtilisateurDistantsParSonPseudo dans if");
                 return courant.getValue();
             }
         }
