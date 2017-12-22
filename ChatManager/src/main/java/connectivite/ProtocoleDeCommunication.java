@@ -1,14 +1,14 @@
 package connectivite;
 
 
+
 import historique.MessageHistorique;
 import historique.MomentEcriture;
+import historique.NotFileException;
 import main.ChatManager;
-import model.UserLocal;
 import model.UsersDistants;
 
 
-import javax.jws.soap.SOAPBinding;
 import java.io.IOException;
 import java.util.Set;
 
@@ -91,7 +91,7 @@ public class ProtocoleDeCommunication {
 
     }
 
-    public void onNewIncomingMessage(String messageRecue) {
+    public void onNewIncomingMessage(String messageRecue) throws IOException, NotFileException {
         String[] messageSurLeReseauRecue = messageRecue.split("[$]", 2);
 
         Entete enteteDuMessageRentrant = Entete.valueOf(messageSurLeReseauRecue[0]);
@@ -104,7 +104,7 @@ public class ProtocoleDeCommunication {
                 String message = messageEtCeluiQuiTeParleAsTab[1];
                 MessageHistorique theMessageHistorique = clavardageManager.useListSessions().retrouveUnHistoriqueParSonUser(celuiQuiTeParle);
                 try {
-                    theMessageHistorique.ecriturefichier(MomentEcriture.MESSAGE_RECU, message);
+                    theMessageHistorique.ecriturefichier(MomentEcriture.MESSAGE_ENVOYE, message);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -145,7 +145,8 @@ public class ProtocoleDeCommunication {
                 String loginUserDistantQuiVeutParlerAvecMoi = messageSurLeReseauRecue[1];
                 UsersDistants theUserQuiVeutParlerAvecMoi = clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(loginUserDistantQuiVeutParlerAvecMoi);
                 clavardageManager.useListSessions().addUserDistantToSession(theUserQuiVeutParlerAvecMoi);
-
+                MessageHistorique messageHistorique = clavardageManager.useListSessions().retrouveUnHistoriqueParSonUser(theUserQuiVeutParlerAvecMoi.getLogin());
+                messageHistorique.lireFichier(messageHistorique.findfichier().getAbsolutePath());
                 break;
 
             case ENVOIE_USERSDISTANTS:
@@ -262,9 +263,7 @@ public class ProtocoleDeCommunication {
 
         try {
             envoieDunMessageEnTCP(loginDeLUtilisateurAQuiOnEnvoieLeMessage, messageSurLeReseau);
-        }catch (Exception e){
-
-        }
+        }catch (Exception e){}
     }
 
 

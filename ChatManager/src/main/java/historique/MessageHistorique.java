@@ -2,9 +2,11 @@ package historique;
 
 
 import main.ChatManager;
-import model.UsersDistants;
+import model.Sessions;
+import ui.viewer.DialoguePageViewer;
 
 import java.io.File;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.*;
 
@@ -13,34 +15,33 @@ import java.util.HashMap;
 
 
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.*;
 
 
 
 
 public class MessageHistorique {
+    private static final int TAILLE_LISTE = 10;
     private final File repertoire;
-    public final UsersDistants userDistant;
 
     private static HashMap<String, File> listeFichiers;
     private static final String PATH = ".\\src\\main\\HistoriqueDossier\\";
     private final ChatManager chatManager;
+    private final Sessions session;
     private File fichierSessionHistorique;
-    private String fichierTrouver;
 
 
-    public MessageHistorique(UsersDistants user, ChatManager theCM) {
+    public MessageHistorique(Sessions session, ChatManager theCM) {
         repertoire = new File(PATH);
         chatManager = theCM;
         listeFichiers = new HashMap<String, File>();
-        userDistant = user;
-        fichierTrouver=null;
-
-
+        this.session = session;
 
     }
     public String toString() {
-        return PATH+chatManager.userLogin()+"_"+userDistant.getLogin()+".txt";
+        return PATH+chatManager.userLogin()+"_"+chatManager.useSessionCourante().getLogin()+".txt";
     }
 
     public void creerFichier() throws IOException, NotFileException {
@@ -54,8 +55,22 @@ public class MessageHistorique {
     }
 
     public void ecriturefichier(MomentEcriture moment, String message) throws IOException {
+        String message_prepare = null;
         FileWriter write = new FileWriter(fichierSessionHistorique, true);
-        String message_prepare =  moment + ":" + LocalDateTime.now() + ":" + message ;
+        switch (moment){
+
+            case MESSAGE_ENVOYE:
+                message_prepare =  chatManager.userPseudo() + "-"+ session.userDistantSessionCourante().getPseudoActuel() + ":" + LocalDateTime.now() + ":" + message ;
+                break;
+
+            case MESSAGE_RECU:
+                message_prepare =  session.userDistantSessionCourante().getPseudoActuel() + "-"+ chatManager.userPseudo() + ":" + LocalDateTime.now() + ":" + message ;
+                break;
+            default:
+                throw new IOException("Ecriture failed");
+
+        }
+
         write.write(message_prepare);
         write.append("\n");
         write.close();
@@ -95,23 +110,49 @@ public class MessageHistorique {
         }
     }
 
-    public File findfichier(String nomfichier){
+    public File findfichier(){
+
+        String nomfichier = toString();
         return listeFichiers.get(nomfichier);
     }
-    public void lirefichier(String nomFichier) throws IOException, NotFileException {
+
+
+    private Queue<String> historique10DerniersMessages(String nomfichier) throws IOException, NotFileException {
         File fichier = fichierSessionHistorique;
+        Queue<String> fifo = new LinkedBlockingQueue<>(TAILLE_LISTE);
         if(fichier.exists()) {
-            System.out.println(nomFichier);
-            FileReader file = new FileReader(nomFichier);
-            BufferedReader reader = new BufferedReader(file);
+            InputStream file = new FileInputStream(nomfichier);
+            InputStreamReader fich = new InputStreamReader(file);
+            BufferedReader reader = new BufferedReader(fich);
             String line;
+            int i=0;
             while (( line = reader.readLine() ) != null) {
-                System.out.println(line);
+                System.out.println("fifo size = "+fifo.size());
+                if (fifo.size() == TAILLE_LISTE) {
+                    fifo.remove();
+                    System.out.println("je supprime et je relance" + i);
+                }
+                fifo.add(line);
             }
             reader.close();
         }else{
             creerFichier();
         }
+        return fifo;
     }
 
+
+    public void lireFichier(String nomfichier) throws IOException, NotFileException {
+        Queue<String> lignes = historique10DerniersMessages(nomfichier);
+        for (String ligneCourante : lignes){
+            System.out.println("lirefichier, messageHistorique : "+ligneCourante);
+            DialoguePageViewer dialoguePageViewer = new DialoguePageViewer(chatManager);
+            dialoguePageViewer.ajoutTextArea(ligneCourante);
+
+        }
+
+    }
+    public Sessions getSession(){
+        return session;
+    }
 }

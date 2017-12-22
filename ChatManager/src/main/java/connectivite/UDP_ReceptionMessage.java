@@ -1,5 +1,7 @@
 package connectivite;
 
+import historique.NotFileException;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -36,6 +38,8 @@ public class UDP_ReceptionMessage implements Runnable {
 
 
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch ( NotFileException e ) {
                 e.printStackTrace();
             }
         }

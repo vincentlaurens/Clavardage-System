@@ -1,5 +1,7 @@
 package connectivite;
 
+import historique.NotFileException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,6 +39,8 @@ public class TCP_ReceptionMessage implements Runnable{
 
                 }
             }catch (IOException e){
+                e.printStackTrace();
+            } catch ( NotFileException e ) {
                 e.printStackTrace();
             }
         }

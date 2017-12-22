@@ -18,11 +18,10 @@ public class ChatManager {
     private UserLocal user;
 
 
-
     public ChatManager(){
         this.protocoleDeCommunication = new ProtocoleDeCommunication(this);
         this.session = new Sessions(this);
-        this.user = new UserLocal(null, null, "damien", "toto");
+        this.user = new UserLocal(null, null, "vince", "toto");
         this.listeDesUsagers = new ListeDesUsagers(this);
         protocoleDeCommunication.ecouteDuReseauEnUDP();
         protocoleDeCommunication.ecouteDuReseauEnTCP(userPort());
@@ -72,9 +71,12 @@ public class ChatManager {
             Set<String> usersCo = this.listeDesUsagers.retourneToutLesUsagers();
             for (String st: usersCo){
                 UsersDistants usersDistantsCourant = this.listeDesUsagers.retourneUnUtilisateurDistantParSonLogin(st);
-                if(!(usersDistantsCourant.getLogin().equals(userLogin()))){
-                    if(usersDistantsCourant.getPseudoActuel().equals(pseudo)){
-                        pseudoUnique = false;
+                if(usersDistantsCourant.getLogin() != null) {
+                    if (!(usersDistantsCourant.getLogin().equals(userLogin()))) {
+
+                        if (usersDistantsCourant.getPseudoActuel().equals(pseudo)) {
+                            pseudoUnique = false;
+                        }
                     }
                 }
 
@@ -98,10 +100,3 @@ public class ChatManager {
 
 
 }
-
-
-
-
-
-
-

@@ -7,6 +7,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import connectivite.Entete;
 import connectivite.ProtocoleDeCommunication;
+import historique.NotFileException;
 import main.ChatManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class ProtocoleDeCommunicationTest {
     }
 
     @Test
-    public void should_print_incoming_messages() throws Exception {
+    public void should_print_incoming_messages() throws Exception, NotFileException {
         String receivedMessage = ENVOIE_MESSAGE_ENTETE + FIELDSEPARATOR + SOME_CONTENT_MESSAGE;
         ChatManager clavardageManager = new ChatManager();
 
@@ -48,7 +49,7 @@ public class ProtocoleDeCommunicationTest {
     }
 
     @Test
-    public void should_print_userLocalDistant() throws Exception {
+    public void should_print_userLocalDistant() throws Exception, NotFileException {
         String receivedMessage = ENVOIE_MESSAGE_ENTETE + FIELDSEPARATOR + SOME_CONTENT_MESSAGE;
         ChatManager clavardageManager = new ChatManager();
 
