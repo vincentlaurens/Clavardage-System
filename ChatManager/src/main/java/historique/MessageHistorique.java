@@ -41,7 +41,7 @@ public class MessageHistorique {
 
     }
     public String toString() {
-        return PATH+chatManager.userLogin()+"_"+chatManager.useSessionCourante().getLogin()+".txt";
+        return PATH+chatManager.userLogin()+"_"+session.userDistantSessionCourante().getLogin()+".txt";
     }
 
     public void creerFichier() throws IOException, NotFileException {

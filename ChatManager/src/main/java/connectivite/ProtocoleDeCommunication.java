@@ -147,6 +147,7 @@ public class ProtocoleDeCommunication {
                 clavardageManager.useListSessions().addUserDistantToSession(theUserQuiVeutParlerAvecMoi);
                 MessageHistorique messageHistorique = clavardageManager.useListSessions().retrouveUnHistoriqueParSonUser(theUserQuiVeutParlerAvecMoi.getLogin());
                 messageHistorique.lireFichier(messageHistorique.findfichier().getAbsolutePath());
+                System.out.println("j'ai créé le fichier"+messageHistorique.findfichier().getAbsolutePath());
                 break;
 
             case ENVOIE_USERSDISTANTS:

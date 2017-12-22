@@ -98,5 +98,12 @@ public class ChatManager {
         return true;
     }
 
+    public void defenieSessionCourante(String pseudoUtilisateurDistantEnChat) {
+        UsersDistants utilisateurDistantEnChat = listeDesUsagers.retourneUtilisateurDistantsParSonPseudo(pseudoUtilisateurDistantEnChat);
+        session.definieUserDistantCourant(utilisateurDistantEnChat);
+    }
 
+    public UsersDistants useSessionCourante(){
+        return session.userDistantSessionCourante();
+    }
 }
