@@ -12,6 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.SplittableRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,31 +37,34 @@ public class DialoguePageController {
     public void onClickSelectionUserCo(TreePath selection) {
         String chemin = selection.toString();
         String pseudo = null;
+        String matchresult;
+        System.out.println(chemin);
         if(chemin.contains(",")) {
             String[] result = chemin.split(",");
-            String[] result2 = result[1].split("]");
-            pseudo = result2[0];
+            System.out.println(result[1]);
+            String[] result1 = result[1].split("]");
+            System.out.println(result1[0]);
+            String[] result2 = result1[0].split(" ");
+            System.out.println(result2[1]);
+            pseudo = result2[1];
         }else{
-            String filtre = "^[^\\\\[\\\\]]+\\]";
+           String[] result = chemin.split("]");
+            System.out.println(result[0]);
+           String[] result1 = result[0].split("\\[");
+            System.out.println(result1[0] + result1[1]);
+           pseudo = result1[1];
 
-            Pattern p = Pattern.compile(filtre);
-
-            Matcher matcher = p.matcher(chemin);
-            if (!matcher.find()) {
-                pseudo = matcher.group();
-            }
         }
-        System.out.println("onClickSelectionUserCo : "+pseudo);
+        System.out.println("onClickSelectionUserCo :"+pseudo);
         if (!(pseudo == null) && !(pseudo.isEmpty()) && !(pseudo.equals("Utilisateurs Connectés")) && !(pseudo.equals(chatManager.userPseudo()))) {
-            System.out.println("onClickSelectionUserCo : "+pseudo);
+            System.out.println("onClickSelectionUserCo :"+pseudo);
             System.out.println(chatManager.accesALaListeDesUsagers().retourneUtilisateurDistantsParSonPseudo(pseudo));
             UsersDistants newUserDistant = chatManager.accesALaListeDesUsagers().retourneUtilisateurDistantsParSonPseudo(pseudo);
             if(newUserDistant != null) {
+                chatManager.useSessions().addUserDistantToSession(newUserDistant);
                 chatManager.defenieSessionCourante(newUserDistant);
                 System.out.println("Après ajout : ");
                 chatManager.useSessions().afficheListeSessions();
-
-                chatManager.useSessions().addUserDistantToSession(newUserDistant);
                 chatManager.getProtocoleDeCommunication().envoieDeDemandeDeSession(newUserDistant.getLogin());
                 System.out.println("onClickSectionUserCo fin :" + chatManager.useSessionCourante().toString());
             }

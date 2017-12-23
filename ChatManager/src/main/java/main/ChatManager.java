@@ -100,6 +100,7 @@ public class ChatManager {
 
     public void defenieSessionCourante(UsersDistants usersDistants) {
         if(usersDistants != null) {
+            System.out.println("chatManger: defineiUserDistant" + usersDistants.toString());
             session.definieUserDistantCourant(usersDistants);
         }
     }

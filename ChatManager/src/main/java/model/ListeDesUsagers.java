@@ -67,9 +67,8 @@ public class ListeDesUsagers {
 
     public UsersDistants retourneUtilisateurDistantsParSonPseudo(String lePseudo){
         for (Map.Entry<String, UsersDistants> courant : listeDesUsersParLeurLogin.entrySet()){
-            System.out.println("dans retourneUtilisateurDistantsParSonPseudo"+ lePseudo + courant.getValue().getPseudoActuel());
+            System.out.println("types "+lePseudo.compareTo(courant.getValue().getPseudoActuel()));
             if(lePseudo.equals(courant.getValue().getPseudoActuel())){
-                System.out.println("dans retourneUtilisateurDistantsParSonPseudo dans if");
                 return courant.getValue();
             }
         }

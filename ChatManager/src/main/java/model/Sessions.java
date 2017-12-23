@@ -5,6 +5,7 @@ import main.ChatManager;
 
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Sessions {
 
@@ -25,8 +26,9 @@ public class Sessions {
     }
 
     public void afficheListeSessions() {
-        if(!listeSessions.isEmpty()) {
-            listeSessions.toString();
+        for (Map.Entry<UsersDistants, MessageHistorique> courant : listeSessions.entrySet()){
+            System.out.println(courant.getKey().toString());
+            System.out.println(courant.getValue().toString());
         }
     }
 
@@ -39,8 +41,9 @@ public class Sessions {
     }
 
     public void definieUserDistantCourant(UsersDistants utilisateurDistantEnChat) {
-        System.out.println("definieUserDistantCourant "+utilisateurDistantEnChat.toString());
+        System.out.println("Sessions : definieUserDistantCourant "+ utilisateurDistantEnChat.toString());
         sessionEnCoursDeChat = utilisateurDistantEnChat;
+        System.out.println("Sessions : apres modif "+sessionEnCoursDeChat.toString());
     }
 
     public UsersDistants userDistantSessionCourante() {
