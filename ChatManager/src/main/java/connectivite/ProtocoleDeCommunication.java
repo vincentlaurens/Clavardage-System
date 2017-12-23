@@ -146,8 +146,7 @@ public class ProtocoleDeCommunication {
                 UsersDistants theUserQuiVeutParlerAvecMoi = clavardageManager.accesALaListeDesUsagers().retourneUnUtilisateurDistantParSonLogin(loginUserDistantQuiVeutParlerAvecMoi);
                 clavardageManager.useSessions().addUserDistantToSession(theUserQuiVeutParlerAvecMoi);
                 System.out.println("Demande ouverture de session "+ clavardageManager.useSessionCourante());
-                MessageHistorique messageHistorique = new MessageHistorique(clavardageManager);//clavardageManager.useListSessions().retrouveUnHistoriqueParSonUser(theUserQuiVeutParlerAvecMoi.getLogin());
-                System.out.println(messageHistorique.findfichier().getAbsolutePath());
+                MessageHistorique messageHistorique = new MessageHistorique(clavardageManager);
                 messageHistorique.lireFichier(messageHistorique.findfichier().getAbsolutePath());
                 System.out.println("j'ai créé le fichier"+messageHistorique.findfichier().getAbsolutePath());
                 break;
@@ -180,12 +179,15 @@ public class ProtocoleDeCommunication {
 
 
         UsersDistants userLocalAsDistant = clavardageManager.returnUserLocal().retourneUserLocalAsDistant();
-
-        Set<String> toutLesUtilisateurConnecte = clavardageManager.accesALaListeDesUsagers().retourneToutLesUsagers();
         MessageSurLeReseau messageSurLeReseau = new MessageSurLeReseau(Entete.ENVOIE_USERLOCAL, userLocalAsDistant);
 
 
-        envoieDunMessageEnUDP(toutLesUtilisateurConnecte, messageSurLeReseau);
+        try {
+
+            udp_envoieMessage.sendMessageOn(PORT_UDP_BROADCAST, messageSurLeReseau);
+        } catch (Exception e) {
+
+        }
         System.out.println("J'ai envoyé mon user local");
 
     }

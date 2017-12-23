@@ -24,22 +24,22 @@ public class Must_Liste_Fichiers_Du_Dossier {
     public void Affichage_Liste_Fichiers_Dossier() {
         ChatManager theCM = new ChatManager();
         UsersDistants user = new UsersDistants("toto", "localhost", "titi", 1045);
-        String fichierATrouver = "vince_toto.txt";
         String message = "Salut ça va !!!!!";
         monMessageHistorique = new MessageHistorique(theCM);
-
+        theCM.useSessions().definieUserDistantCourant(user);
         try {
             monMessageHistorique.creerFichier();
             monMessageHistorique.listeFichiersDossier();
             monMessageHistorique.affichageListeFichierDuDossier();
             File fichierTrouver = monMessageHistorique.findfichier();
-            if (fichierTrouver != null) {
+            System.out.println(fichierTrouver);
+            System.out.println(fichierTrouver.getName());
+            if (!fichierTrouver.getName().isEmpty()) {
                 System.out.println("Fichier trouvé : " + fichierTrouver.toString());
                 monMessageHistorique.ecriturefichier(MomentEcriture.MESSAGE_RECU,message);
             } else {
                 System.out.println("Fichier non trouvé");
             }
-            monMessageHistorique.lireFichier(fichierTrouver.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NotFileException e) {

@@ -26,7 +26,7 @@ public class MessageHistorique {
     private static final int TAILLE_LISTE = 10;
     private final File repertoire;
     private static HashMap<String, File> listeFichiers;
-    private static final String PATH = ".\\src\\main\\HistoriqueDossier\\";
+    private static final String PATH = "ChatManager\\src\\main\\HistoriqueDossier\\";
     private final ChatManager chatManager;
     private File fichierSessionHistorique;
 
@@ -45,11 +45,12 @@ public class MessageHistorique {
     public void creerFichier() throws IOException, NotFileException {
         fichierSessionHistorique = new File(toString());
         System.out.println("création fichierSessionHistorique");
-        if(!fichierSessionHistorique.exists()){
-            if (!fichierSessionHistorique.createNewFile()) {
+        System.out.println("chemin "+ toString());
+        System.out.println("Est un directory "+ fichierSessionHistorique.getCanonicalPath());
+        System.out.println("Est un ficher : "+fichierSessionHistorique.isFile());
+        if (!fichierSessionHistorique.createNewFile()) {
                 throw new NotFileException("Impossible de créer  le fichier");
             }
-        }
     }
 
     public void ecriturefichier(MomentEcriture moment, String message) throws IOException {
@@ -111,6 +112,7 @@ public class MessageHistorique {
     public File findfichier(){
 
         String nomfichier = toString();
+        System.out.println("MessageHist "+listeFichiers.get(nomfichier));
         return listeFichiers.get(nomfichier);
     }
 

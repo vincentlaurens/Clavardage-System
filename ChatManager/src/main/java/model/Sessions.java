@@ -49,4 +49,8 @@ public class Sessions {
     public UsersDistants userDistantSessionCourante() {
         return sessionEnCoursDeChat;
     }
+
+    public String retourneFileUserCourant() {
+        return listeSessions.get(chatManager.useSessionCourante()).toString();
+    }
 }
